@@ -1485,6 +1485,97 @@
       transform: translateX(-50%) translateY(0);
       opacity: 1;
     }
+
+    /* Developer Profile Card */
+    .dev-profile-card {
+      background: linear-gradient(135deg, #064e3b 0%, #065f46 100%);
+      color: #ffffff;
+      border-radius: 12px;
+      padding: 16px;
+      margin-top: 14px;
+      margin-bottom: 16px;
+      box-shadow: 0 4px 14px rgba(6, 78, 59, 0.18);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .dev-profile-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(4px);
+      padding: 3px 9px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 700;
+      color: #a7f3d0;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .dev-name {
+      font-size: 17px;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 2px;
+      letter-spacing: 0.3px;
+    }
+
+    .dev-tagline {
+      font-size: 12px;
+      color: #d1fae5;
+      margin-bottom: 12px;
+    }
+
+    .dev-links-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+
+    .dev-link-pill {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 9px 12px;
+      border-radius: 8px;
+      color: #ffffff !important;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 600;
+      transition: all 0.15s ease;
+    }
+
+    .dev-link-pill:hover, .dev-link-pill:active {
+      background: rgba(255, 255, 255, 0.25);
+      border-color: rgba(255, 255, 255, 0.4);
+      transform: translateY(-1px);
+    }
+
+    .dev-link-icon {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+      color: #6ee7b7;
+    }
+
+    .dev-link-text {
+      flex: 1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .dev-link-arrow {
+      width: 14px;
+      height: 14px;
+      opacity: 0.75;
+      flex-shrink: 0;
+    }
   </style>
 </head>
 <body>
@@ -1503,6 +1594,10 @@
         </div>
       </div>
       <div class="header-actions">
+        <button class="btn-header" onclick="openModal('devInfoModal')" title="ডেভেলপার পরিচিতি">
+          <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M12 2a5 5 0 0 1 5 5v2a5 5 0 0 1-10 0V7a5 5 0 0 1 5-5z"/><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/></svg>
+          <span>পরিচিতি</span>
+        </button>
         <button class="btn-header" onclick="openBackupModal()" title="এক্সপোর্ট ও ব্যাকআপ">
           <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
           <span>এক্সপোর্ট</span>
@@ -1731,6 +1826,39 @@
           <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
           সকল ডাটা সম্পূর্ণ মুছুন (All Clear)
         </button>
+      </div>
+
+      <!-- Developer Profile Card -->
+      <div class="dev-profile-card">
+        <div class="dev-profile-badge">
+          <svg style="width:12px;height:12px;" class="icon" viewBox="0 0 24 24"><path d="M12 2a5 5 0 0 1 5 5v2a5 5 0 0 1-10 0V7a5 5 0 0 1 5-5z"/><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/></svg>
+          অ্যাপ প্রস্তুতকারক ও ডেভেলপার
+        </div>
+        <div class="dev-name">Shadin Sharkar</div>
+        <div class="dev-tagline">ওয়েব ও মোবাইল অ্যাপ্লিকেশন ডেভেলপার</div>
+        
+        <div class="dev-links-grid">
+          <!-- Website -->
+          <a href="https://shadin.info" target="_blank" class="dev-link-pill">
+            <svg class="dev-link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" x2="22" y1="12" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+            <span class="dev-link-text">ওয়েবসাইট: <strong>Shadin.info</strong></span>
+            <svg class="dev-link-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+          </a>
+
+          <!-- Email -->
+          <a href="mailto:shadin.web404@gmail.com" class="dev-link-pill">
+            <svg class="dev-link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+            <span class="dev-link-text">ইমেইল: <strong>shadin.web404@gmail.com</strong></span>
+            <svg class="dev-link-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+          </a>
+
+          <!-- Facebook -->
+          <a href="https://www.facebook.com/developershadin" target="_blank" class="dev-link-pill">
+            <svg class="dev-link-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+            <span class="dev-link-text">ফেসবুক: <strong>developershadin</strong></span>
+            <svg class="dev-link-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+          </a>
+        </div>
       </div>
     </div>
   </main>
@@ -2090,6 +2218,85 @@
             <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/></svg>
             সব মুছুন
           </button>
+        </div>
+
+        <!-- Developer Info Card in Backup Modal -->
+        <div class="dev-profile-card" style="margin-top: 16px; margin-bottom: 4px;">
+          <div class="dev-profile-badge">
+            <svg style="width:12px;height:12px;" class="icon" viewBox="0 0 24 24"><path d="M12 2a5 5 0 0 1 5 5v2a5 5 0 0 1-10 0V7a5 5 0 0 1 5-5z"/><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/></svg>
+            অ্যাপ ডেভেলপার
+          </div>
+          <div class="dev-name">Shadin Sharkar</div>
+          <div class="dev-tagline">ওয়েবসাইট: Shadin.info</div>
+          <div class="dev-links-grid">
+            <a href="https://shadin.info" target="_blank" class="dev-link-pill">
+              <svg class="dev-link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" x2="22" y1="12" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+              <span class="dev-link-text">Shadin.info</span>
+              <svg class="dev-link-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+            </a>
+            <a href="mailto:shadin.web404@gmail.com" class="dev-link-pill">
+              <svg class="dev-link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+              <span class="dev-link-text">shadin.web404@gmail.com</span>
+              <svg class="dev-link-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+            </a>
+            <a href="https://www.facebook.com/developershadin" target="_blank" class="dev-link-pill">
+              <svg class="dev-link-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+              <span class="dev-link-text">facebook.com/developershadin</span>
+              <svg class="dev-link-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: ডেভেলপার পরিচিতি -->
+  <div class="modal-overlay" id="devInfoModal" onclick="handleOverlayClick(event, 'devInfoModal')">
+    <div class="modal-sheet">
+      <div class="sheet-handle"></div>
+      <div class="modal-head">
+        <h2>
+          <svg class="icon" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          ডেভেলপার পরিচিতি
+        </h2>
+        <button class="btn-close" onclick="closeModal('devInfoModal')">
+          <svg class="icon icon-sm" viewBox="0 0 24 24"><line x1="18" x2="6" y1="6" y2="18"/><line x1="6" x2="18" y1="6" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="modal-scroll" style="padding-top: 6px;">
+        <div class="dev-profile-card" style="margin-top: 0; box-shadow: none;">
+          <div class="dev-profile-badge">
+            <svg style="width:12px;height:12px;" class="icon" viewBox="0 0 24 24"><path d="M12 2a5 5 0 0 1 5 5v2a5 5 0 0 1-10 0V7a5 5 0 0 1 5-5z"/><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/></svg>
+            Creator & Lead Developer
+          </div>
+          <div class="dev-name" style="font-size: 20px;">Shadin Sharkar</div>
+          <div class="dev-tagline" style="font-size: 13px; margin-bottom: 10px;">Full-Stack Web & Mobile App Developer</div>
+          <p style="font-size: 13px; line-height: 1.5; color: #ecfdf5; margin-bottom: 16px; opacity: 0.95;">
+            দোকান বাকি খাতা অ্যাপটি স্থানীয় দোকান ও ব্যবসায়ীদের সুবিধার জন্য সম্পূর্ণ ফ্রি ও নিরাপদভাবে তৈরি করা হয়েছে। যেকোনো কাস্টম সফটওয়্যার, ওয়েবসাইট বা মোবাইল অ্যাপ্লিকেশনের প্রয়োজনে সরাসরি যোগাযোগ করতে পারেন।
+          </p>
+          
+          <div class="dev-links-grid">
+            <!-- Website -->
+            <a href="https://shadin.info" target="_blank" class="dev-link-pill">
+              <svg class="dev-link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" x2="22" y1="12" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+              <span class="dev-link-text">ওয়েবসাইট: <strong>Shadin.info</strong></span>
+              <svg class="dev-link-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+            </a>
+
+            <!-- Email -->
+            <a href="mailto:shadin.web404@gmail.com" class="dev-link-pill">
+              <svg class="dev-link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+              <span class="dev-link-text">ইমেইল: <strong>shadin.web404@gmail.com</strong></span>
+              <svg class="dev-link-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+            </a>
+
+            <!-- Facebook -->
+            <a href="https://www.facebook.com/developershadin" target="_blank" class="dev-link-pill">
+              <svg class="dev-link-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+              <span class="dev-link-text">ফেসবুক: <strong>developershadin</strong></span>
+              <svg class="dev-link-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+            </a>
+          </div>
         </div>
       </div>
     </div>

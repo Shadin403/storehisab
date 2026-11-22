@@ -60,7 +60,20 @@ storehisab/
 
 ---
 
-## 👨‍💻 লেখক ও কপিরাইট
-- **ডেভেলপার:** Shadin Sarkar (স্বাধীন সরকার)
-- **GitHub:** [@Shadin403](https://github.com/Shadin403)
-- **লাইসেন্স:** MIT License
+## 👨‍💻 ডেভেলপার পরিচিতি (Developer Information)
+
+অ্যাপটি তৈরি ও ডিজাইন করেছেন **Shadin Sharkar**:
+
+| মাধ্যম | লিঙ্ক ও যোগাযোগের ঠিকানা |
+| :--- | :--- |
+| 🌐 **ওয়েবসাইট** | [shadin.info](https://shadin.info) |
+| ✉️ **ইমেইল** | [shadin.web404@gmail.com](mailto:shadin.web404@gmail.com) |
+| 👥 **ফেসবুক** | [facebook.com/developershadin](https://www.facebook.com/developershadin) |
+| 🐙 **গিটহাব** | [@Shadin403](https://github.com/Shadin403) |
+
+> যেকোনো সফটওয়্যার, ওয়েব অ্যাপ্লিকেশন অথবা মোবাইল অ্যাপ তৈরির জন্য সরাসরি যোগাযোগ করতে পারেন।
+
+---
+
+## 📜 লাইসেন্স
+MIT License — Copyright (c) 2026 Shadin Sharkar
