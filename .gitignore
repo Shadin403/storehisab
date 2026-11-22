@@ -1,0 +1,19 @@
+# Ignore all top-level files and folders in D:\Sadhin by default
+/*
+
+# Explicitly whitelist Store Hisab files and folders
+!/README.md
+!/DukanBakiKhata.apk
+!/বাকি_খাতা_ব্যবহার_নির্দেশিকা.txt
+!/dukan_baki_app/
+!/dukan_baki_web/
+!/.gitignore
+
+# Ignore build tools, intermediate files, binaries and keystores
+dukan_baki_app/build-tools-34/
+dukan_baki_app/build_tools/
+dukan_baki_app/build/
+dukan_baki_app/keystore/
+dukan_baki_app/*.keystore
+dukan_baki_app/*.apk
+dukan_baki_app/*.dex

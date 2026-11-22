@@ -1,0 +1,3928 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>দোকানের বাকি খাতা</title>
+  <meta name="theme-color" content="#064e3b">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-main: #f8fafc;
+      --card-bg: #ffffff;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --text-sub: #475569;
+      --border-color: #e2e8f0;
+      --border-focus: #0f766e;
+      --primary: #047857;
+      --primary-dark: #064e3b;
+      --primary-light: #ecfdf5;
+      --due: #dc2626;
+      --due-bg: #fef2f2;
+      --due-border: #fecaca;
+      --paid: #16a34a;
+      --paid-bg: #f0fdf4;
+      --paid-border: #bbf7d0;
+      --font-family: 'Hind Siliguri', 'Noto Sans Bengali', 'Kalpurush', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: var(--font-family);
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      user-select: none;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* SVG Icon utility */
+    .icon {
+      width: 18px;
+      height: 18px;
+      stroke-width: 2;
+      stroke: currentColor;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      display: inline-block;
+      vertical-align: middle;
+      flex-shrink: 0;
+    }
+
+    .icon-sm {
+      width: 15px;
+      height: 15px;
+      stroke-width: 2;
+    }
+
+    .icon-lg {
+      width: 22px;
+      height: 22px;
+      stroke-width: 2;
+    }
+
+    /* Top Navigation Header */
+    .app-header {
+      background: var(--primary-dark);
+      color: #ffffff;
+      padding: 14px 16px 16px;
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    .header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+
+    .brand-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-logo {
+      width: 36px;
+      height: 36px;
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #34d399;
+    }
+
+    .brand-text h1 {
+      font-size: 17px;
+      font-weight: 700;
+      line-height: 1.2;
+      letter-spacing: -0.2px;
+    }
+
+    .brand-text p {
+      font-size: 11px;
+      color: #a7f3d0;
+      font-weight: 500;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn-header {
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: white;
+      padding: 6px 10px;
+      height: 34px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      font-family: inherit;
+      transition: background 0.15s;
+    }
+
+    .btn-header:active {
+      background: rgba(255, 255, 255, 0.25);
+    }
+
+    /* Structured Summary Grid */
+    .summary-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .summary-box {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 8px;
+      padding: 10px 12px;
+    }
+
+    .summary-box.highlight {
+      grid-column: span 2;
+      background: rgba(255, 255, 255, 0.14);
+      border-color: rgba(255, 255, 255, 0.25);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .summary-title {
+      font-size: 11px;
+      color: #a7f3d0;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    .summary-num {
+      font-size: 19px;
+      font-weight: 700;
+      margin-top: 2px;
+    }
+
+    .summary-num.large {
+      font-size: 24px;
+      color: #fef08a;
+    }
+
+    /* Search Box */
+    .search-wrap {
+      position: relative;
+    }
+
+    .search-input {
+      width: 100%;
+      background: #ffffff;
+      border: none;
+      padding: 10px 14px 10px 38px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-family: inherit;
+      color: var(--text-main);
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+      outline: none;
+    }
+
+    .search-icon-pos {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+    }
+
+    /* Container */
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 12px 14px 110px;
+      width: 100%;
+      flex: 1;
+    }
+
+    /* Quick Action Banner */
+    .action-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .action-row-btn {
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 9px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-sub);
+      cursor: pointer;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+      transition: background 0.15s, border-color 0.15s;
+    }
+
+    .action-row-btn.pdf {
+      color: #b91c1c;
+      border-color: #fecaca;
+      background: #fef2f2;
+    }
+
+    .action-row-btn.backup {
+      color: var(--primary);
+      border-color: #a7f3d0;
+      background: #ecfdf5;
+    }
+
+    .action-row-btn:active {
+      transform: scale(0.98);
+    }
+
+    /* Filter Segments */
+    .filter-bar {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 12px;
+      background: #e2e8f0;
+      padding: 3px;
+      border-radius: 8px;
+    }
+
+    .filter-btn {
+      flex: 1;
+      border: none;
+      background: transparent;
+      padding: 6px 8px;
+      border-radius: 6px;
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-sub);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      transition: all 0.15s;
+    }
+
+    .filter-btn.active {
+      background: #ffffff;
+      color: var(--text-main);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    }
+
+    /* Customer Cards */
+    .customer-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .customer-card {
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+      cursor: pointer;
+      transition: border-color 0.15s;
+    }
+
+    .customer-card:active {
+      background: #f8fafc;
+      border-color: #cbd5e1;
+    }
+
+    .customer-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .customer-badge-initial {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      background: #e0f2fe;
+      color: #0369a1;
+      font-size: 16px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      border: 1px solid #bae6fd;
+    }
+
+    .customer-avatar-img {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      object-fit: cover;
+      flex-shrink: 0;
+      border: 1px solid var(--border-color);
+      display: block;
+    }
+
+    .customer-info {
+      min-width: 0;
+    }
+
+    .customer-name {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-main);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .customer-meta {
+      font-size: 12px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 2px;
+    }
+
+    .customer-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
+      padding-left: 8px;
+    }
+
+    .balance-display {
+      text-align: right;
+    }
+
+    .balance-val {
+      font-size: 16px;
+      font-weight: 800;
+      line-height: 1.1;
+    }
+
+    .balance-val.due { color: var(--due); }
+    .balance-val.paid { color: var(--paid); }
+
+    .balance-sub {
+      font-size: 10px;
+      color: var(--text-muted);
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .btn-trash {
+      background: #fff;
+      border: 1px solid var(--border-color);
+      color: #94a3b8;
+      width: 32px;
+      height: 32px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .btn-trash:hover, .btn-trash:active {
+      color: var(--due);
+      border-color: #fca5a5;
+      background: #fef2f2;
+    }
+
+    /* Floating Action Button */
+    .fab-btn {
+      position: fixed;
+      bottom: 74px;
+      right: 18px;
+      background: var(--primary);
+      color: #ffffff;
+      border: none;
+      padding: 12px 18px;
+      border-radius: 24px;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 4px 14px rgba(4, 120, 87, 0.4);
+      cursor: pointer;
+      z-index: 45;
+      transition: transform 0.15s, background 0.15s;
+    }
+
+    .fab-btn:active {
+      transform: scale(0.96);
+    }
+
+    /* Bottom Navigation Bar */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 60px;
+      background: #ffffff;
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      z-index: 50;
+      box-shadow: 0 -3px 12px rgba(0, 0, 0, 0.06);
+    }
+
+    .nav-tab-btn {
+      flex: 1;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      background: none;
+      border: none;
+      color: #64748b;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.15s ease;
+      position: relative;
+    }
+
+    .nav-tab-btn.active {
+      color: var(--primary);
+      font-weight: 700;
+    }
+
+    .nav-tab-btn.active::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 20%;
+      right: 20%;
+      height: 3px;
+      background: var(--primary);
+      border-radius: 0 0 3px 3px;
+    }
+
+    .nav-tab-btn .icon {
+      width: 22px;
+      height: 22px;
+      stroke-width: 2;
+    }
+
+    .nav-tab-btn span {
+      font-size: 11px;
+      line-height: 1;
+    }
+
+    /* Other Accounts Styling */
+    .other-summary-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .other-sum-card {
+      background: white;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 10px 8px;
+      text-align: center;
+    }
+
+    .other-sum-card.inc {
+      border-color: #bbf7d0;
+      background: #f0fdf4;
+    }
+
+    .other-sum-card.exp {
+      border-color: #fecaca;
+      background: #fef2f2;
+    }
+
+    .other-sum-card.bal {
+      border-color: #bae6fd;
+      background: #f0f9ff;
+    }
+
+    .other-sum-title {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 2px;
+    }
+
+    .other-sum-val {
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .other-entry-card {
+      background: white;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 10px 12px;
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: transform 0.1s;
+    }
+
+    .other-entry-card:active {
+      transform: scale(0.99);
+    }
+
+    .other-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+      flex: 1;
+    }
+
+    .other-cat-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .other-cat-icon.expense {
+      background: #fee2e2;
+      color: #b91c1c;
+      border: 1px solid #fecaca;
+    }
+
+    .other-cat-icon.income {
+      background: #dcfce7;
+      color: #15803d;
+      border: 1px solid #bbf7d0;
+    }
+
+    .other-details {
+      min-width: 0;
+    }
+
+    .other-cat-name {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .other-meta {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .other-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-align: right;
+    }
+
+    .other-amt {
+      font-size: 15px;
+      font-weight: 800;
+    }
+
+    .other-amt.expense {
+      color: var(--due);
+    }
+
+    .other-amt.income {
+      color: var(--paid);
+    }
+
+    /* Reports & Overview Center */
+    .report-card {
+      background: white;
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 14px;
+      margin-bottom: 12px;
+    }
+
+    .report-card h3 {
+      font-size: 15px;
+      color: var(--primary-dark);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .report-metric-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px dashed var(--border-color);
+      font-size: 14px;
+    }
+
+    .report-metric-row:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .report-btn-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    /* Empty Slate */
+    .empty-slate {
+      text-align: center;
+      padding: 48px 16px;
+      background: white;
+      border-radius: 12px;
+      border: 1px dashed var(--border-color);
+      margin-top: 10px;
+    }
+
+    .empty-slate-icon {
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+
+    .empty-slate h3 {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 4px;
+    }
+
+    .empty-slate p {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    /* Modal System */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(15, 23, 42, 0.65);
+      backdrop-filter: blur(2px);
+      z-index: 50;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.2s ease;
+    }
+
+    .modal-overlay.open {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal-sheet {
+      background: #ffffff;
+      width: 100%;
+      max-width: 520px;
+      border-radius: 16px 16px 0 0;
+      padding: 14px 16px 24px;
+      max-height: 94vh;
+      display: flex;
+      flex-direction: column;
+      transform: translateY(100%);
+      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .modal-overlay.open .modal-sheet {
+      transform: translateY(0);
+    }
+
+    .sheet-handle {
+      width: 32px;
+      height: 4px;
+      background: #cbd5e1;
+      border-radius: 4px;
+      margin: 0 auto 10px;
+    }
+
+    .modal-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 8px;
+    }
+
+    .modal-head h2 {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-close {
+      background: #f1f5f9;
+      border: none;
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+
+    .modal-scroll {
+      overflow-y: auto;
+      flex: 1;
+    }
+
+    /* Form Controls */
+    .form-row {
+      margin-bottom: 10px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-sub);
+      margin-bottom: 4px;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 9px 12px;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+      font-family: inherit;
+      font-size: 14px;
+      color: var(--text-main);
+      outline: none;
+      background: #ffffff;
+      transition: border-color 0.15s;
+    }
+
+    .form-input:focus {
+      border-color: var(--border-focus);
+    }
+
+    .btn-submit {
+      width: 100%;
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 10px;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .btn-submit:active {
+      background: var(--primary-dark);
+    }
+
+    /* Compact Customer Header */
+    .compact-hero-box {
+      background: #f8fafc;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 10px 12px;
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .hero-cust-profile {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .hero-avatar-wrap {
+      position: relative;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .hero-avatar-img {
+      width: 44px;
+      height: 44px;
+      border-radius: 8px;
+      object-fit: cover;
+      border: 1px solid var(--border-color);
+      display: block;
+    }
+
+    .hero-avatar-initial {
+      width: 44px;
+      height: 44px;
+      border-radius: 8px;
+      background: #e0f2fe;
+      color: #0369a1;
+      font-size: 18px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid #bae6fd;
+    }
+
+    .hero-avatar-cam-badge {
+      position: absolute;
+      bottom: -3px;
+      right: -3px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1.5px solid white;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    }
+
+    /* Avatar Upload in New Customer Modal */
+    .avatar-upload-box {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 8px 12px;
+      background: #f8fafc;
+      border: 1px dashed var(--border-color);
+      border-radius: 8px;
+      margin-bottom: 12px;
+    }
+
+    .avatar-preview-wrap {
+      width: 52px;
+      height: 52px;
+      border-radius: 8px;
+      background: #f1f5f9;
+      border: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      flex-shrink: 0;
+      cursor: pointer;
+    }
+
+    .avatar-preview-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .avatar-upload-btns {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .avatar-btn-choose {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 10px;
+      font-size: 12px;
+      font-weight: 600;
+      font-family: inherit;
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      color: var(--text-main);
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .avatar-btn-choose:hover {
+      background: #f1f5f9;
+    }
+
+    .avatar-btn-remove {
+      font-size: 11px;
+      font-family: inherit;
+      color: var(--due);
+      background: none;
+      border: none;
+      cursor: pointer;
+      text-align: left;
+      padding: 0;
+      text-decoration: underline;
+    }
+
+    .hero-name {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .hero-phone {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 1px;
+    }
+
+    .hero-due-badge {
+      text-align: right;
+    }
+
+    .hero-due-amt {
+      font-size: 18px;
+      font-weight: 800;
+      line-height: 1.1;
+    }
+
+    .hero-due-amt.due { color: var(--due); }
+    .hero-due-amt.paid { color: var(--paid); }
+
+    .hero-due-tag {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    /* 5 Micro Action Buttons */
+    .hero-actions-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 5px;
+      margin-bottom: 10px;
+    }
+
+    .micro-btn {
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      padding: 6px 3px;
+      border-radius: 6px;
+      font-family: inherit;
+      font-size: 10.5px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      text-decoration: none;
+      cursor: pointer;
+      color: var(--text-sub);
+    }
+
+    .micro-btn.call { color: #0284c7; }
+    .micro-btn.wa { color: #16a34a; }
+    .micro-btn.pdf { color: #b91c1c; }
+    .micro-btn.edit { color: #0f766e; }
+    .micro-btn.del { color: var(--due); }
+
+    .micro-btn:active {
+      background: #f1f5f9;
+    }
+
+    /* Compact Entry Box */
+    .entry-card {
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 10px 12px;
+      margin-bottom: 10px;
+    }
+
+    /* Segmented Pill Toggle */
+    .pill-segmented {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4px;
+      background: #f1f5f9;
+      padding: 3px;
+      border-radius: 6px;
+      margin-bottom: 8px;
+    }
+
+    .pill-opt {
+      border: none;
+      background: transparent;
+      padding: 6px 8px;
+      border-radius: 5px;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+    }
+
+    .pill-opt.active.due {
+      background: #ffffff;
+      color: var(--due);
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+    }
+
+    .pill-opt.active.paid {
+      background: #ffffff;
+      color: var(--paid);
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+    }
+
+    /* Currency Amount Input */
+    .amount-input-box {
+      position: relative;
+      margin-bottom: 8px;
+    }
+
+    .taka-symbol {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--primary);
+      pointer-events: none;
+    }
+
+    .amount-field {
+      width: 100%;
+      height: 48px;
+      padding: 8px 14px 8px 38px;
+      border-radius: 8px;
+      border: 1.5px solid #cbd5e1;
+      background: #ffffff;
+      font-family: inherit;
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--text-main);
+      outline: none;
+      transition: all 0.15s ease;
+    }
+
+    .amount-field:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(4, 120, 87, 0.12);
+    }
+
+    /* Quick Chips */
+    .chips-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+
+    .chip-btn, .chip-item {
+      height: 38px;
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      color: #334155;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.12s ease;
+      user-select: none;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+    }
+
+    .chip-btn:hover, .chip-item:hover {
+      background: #e2e8f0;
+      border-color: #94a3b8;
+      color: #0f172a;
+    }
+
+    .chip-btn:active, .chip-item:active {
+      transform: scale(0.96);
+      background: #cbd5e1;
+    }
+
+    /* Past Notes Dynamic Suggestions */
+    .note-history-wrap {
+      margin-top: 6px;
+      margin-bottom: 8px;
+      padding: 6px 8px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+    }
+
+    .note-history-title {
+      font-size: 11px;
+      font-weight: 700;
+      color: #64748b;
+      margin-bottom: 5px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .note-history-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      max-height: 84px;
+      overflow-y: auto;
+    }
+
+    .note-chip-item {
+      display: inline-flex;
+      align-items: center;
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+    }
+
+    .note-chip {
+      background: transparent;
+      border: none;
+      color: #1e293b;
+      font-size: 11.5px;
+      font-weight: 600;
+      padding: 4px 8px;
+      cursor: pointer;
+      font-family: inherit;
+      white-space: nowrap;
+      user-select: none;
+      transition: background 0.1s;
+    }
+
+    .note-chip:hover, .note-chip:active {
+      background: #ecfdf5;
+      color: #047857;
+    }
+
+    .note-chip-del {
+      background: transparent;
+      border: none;
+      border-left: 1px solid #e2e8f0;
+      color: #94a3b8;
+      font-size: 13px;
+      padding: 3px 6px;
+      cursor: pointer;
+      line-height: 1;
+    }
+
+    .note-chip-del:hover, .note-chip-del:active {
+      background: #fee2e2;
+      color: #ef4444;
+    }
+
+    /* 2 Column Inline Fields */
+    .inline-col2 {
+      display: grid;
+      grid-template-columns: 1.6fr 1.2fr;
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+
+    .inline-col2 input {
+      padding: 8px 10px;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+      font-family: inherit;
+      font-size: 13px;
+      color: var(--text-main);
+      outline: none;
+      width: 100%;
+      background: #ffffff;
+    }
+
+    .inline-col2 input:focus {
+      border-color: var(--border-focus);
+    }
+
+    /* Compact History List */
+    .history-head-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+
+    .history-head-row h4 {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .history-items-container {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      max-height: 180px;
+      overflow-y: auto;
+    }
+
+    .hist-card {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 6px 10px;
+      background: #f8fafc;
+      border-radius: 6px;
+      border: 1px solid var(--border-color);
+    }
+
+    .hist-card-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+      flex: 1;
+    }
+
+    .hist-badge-tag {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 4px;
+      flex-shrink: 0;
+    }
+
+    .hist-badge-tag.due { background: var(--due-bg); color: var(--due); border: 1px solid var(--due-border); }
+    .hist-badge-tag.paid { background: var(--paid-bg); color: var(--paid); border: 1px solid var(--paid-border); }
+
+    .hist-card-text {
+      min-width: 0;
+      flex: 1;
+    }
+
+    .hist-card-text p {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-main);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .hist-card-text span {
+      font-size: 10px;
+      color: var(--text-muted);
+    }
+
+    .hist-card-right {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    .hist-amt {
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .hist-amt.due { color: var(--due); }
+    .hist-amt.paid { color: var(--paid); }
+
+    .btn-del-mini {
+      background: transparent;
+      border: none;
+      color: #94a3b8;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+    }
+
+    .btn-del-mini:hover { color: var(--due); }
+
+    /* Backup Cards */
+    .backup-row-item {
+      background: #f8fafc;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 10px 12px;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .backup-row-info h4 {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .backup-row-info p {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .btn-action-sm {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      white-space: nowrap;
+    }
+
+    .btn-action-sm.danger { background: var(--due); }
+    .btn-action-sm.secondary { background: #475569; }
+
+    .btn-action-sm:active {
+      opacity: 0.9;
+    }
+
+    /* Print Template */
+    #printContainer {
+      display: none;
+    }
+
+    @media print {
+      body * {
+        visibility: hidden !important;
+      }
+      #printContainer, #printContainer * {
+        visibility: visible !important;
+      }
+      #printContainer {
+        display: block !important;
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        background: white;
+        color: black;
+        padding: 20px;
+        font-family: var(--font-family);
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+      }
+      th, td {
+        border: 1px solid #333;
+        padding: 6px 8px;
+        text-align: left;
+        font-size: 12px;
+      }
+      th {
+        background-color: #f1f5f9;
+        font-weight: bold;
+      }
+      .text-right { text-align: right; }
+      .text-center { text-align: center; }
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      top: 16px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-100px);
+      background: var(--text-main);
+      color: white;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+      z-index: 100;
+      opacity: 0;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      pointer-events: none;
+    }
+
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="app-header">
+    <div class="header-top">
+      <div class="brand-wrap">
+        <div class="brand-logo">
+          <!-- Real Storefront SVG Icon -->
+          <svg class="icon icon-lg" viewBox="0 0 24 24"><path d="m2 7 4.41-4.41A2 2 0 0 1 7.83 2h8.34a2 2 0 0 1 1.42.59L22 7"/><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><path d="M15 22v-4a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v4"/><path d="M2 7h20"/></svg>
+        </div>
+        <div class="brand-text">
+          <h1 id="shopNameDisplay">দোকানের বাকি খাতা</h1>
+          <p id="todayDateStr">লেজার খাতা</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button class="btn-header" onclick="openBackupModal()" title="এক্সপোর্ট ও ব্যাকআপ">
+          <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
+          <span>এক্সপোর্ট</span>
+        </button>
+        <button class="btn-header" onclick="openShopSettings()" title="দোকানের নাম পরিবর্তন">
+          <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Structured Metric Boxes -->
+    <div class="summary-grid">
+      <div class="summary-box highlight">
+        <div>
+          <div class="summary-title">
+            <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            মোট বকেয়া বাকি (মার্কেট ডিউ)
+          </div>
+          <div class="summary-num large" id="totalDueVal">৳ ০</div>
+        </div>
+        <div style="text-align: right;">
+          <div class="summary-title">
+            <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            মোট কাস্টমার
+          </div>
+          <div class="summary-num" id="totalCustomersVal">০ জন</div>
+        </div>
+      </div>
+      <div class="summary-box">
+        <div class="summary-title" style="color: #fecaca;">
+          <svg class="icon icon-sm" viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/></svg>
+          মোট দেওয়া বাকি
+        </div>
+        <div class="summary-num" style="color: #fecaca;" id="totalGivenVal">৳ ০</div>
+      </div>
+      <div class="summary-box">
+        <div class="summary-title" style="color: #a7f3d0;">
+          <svg class="icon icon-sm" viewBox="0 0 24 24"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/></svg>
+          মোট আদায় / জমা
+        </div>
+        <div class="summary-num" style="color: #a7f3d0;" id="totalReceivedVal">৳ ০</div>
+      </div>
+    </div>
+
+    <!-- Search Input -->
+    <div class="search-wrap">
+      <svg class="icon icon-sm search-icon-pos" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+      <input type="text" id="searchInput" class="search-input" placeholder="কাস্টমারের নাম বা মোবাইল নম্বর খুঁজুন..." oninput="handleSearch()">
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="container">
+    <!-- TAB 1: বাকি খাতা (Customers Ledger) -->
+    <div id="tabBakiPage">
+      <!-- Action Row -->
+      <div class="action-row">
+        <button class="action-row-btn pdf" onclick="exportFullLedgerPDF()">
+          <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/></svg>
+          <span>PDF রিপোর্ট</span>
+        </button>
+        <button class="action-row-btn backup" onclick="openBackupModal()">
+          <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></svg>
+          <span>ব্যাকআপ ও এক্সেল</span>
+        </button>
+      </div>
+
+      <!-- Filter Segmented Tabs -->
+      <div class="filter-bar">
+        <button class="filter-btn active" onclick="setFilter('all', this)">
+          <span>সকল কাস্টমার</span> (<span id="countAll">০</span>)
+        </button>
+        <button class="filter-btn" onclick="setFilter('due', this)">
+          <span style="color: var(--due);">বাকি আছে</span> (<span id="countDue">০</span>)
+        </button>
+        <button class="filter-btn" onclick="setFilter('paid', this)">
+          <span style="color: var(--paid);">পরিশোধিত</span> (<span id="countPaid">০</span>)
+        </button>
+      </div>
+
+      <!-- Customer List -->
+      <div class="customer-list" id="customerList">
+        <!-- Rendered dynamically -->
+      </div>
+
+      <!-- Empty Slate -->
+      <div class="empty-slate" id="emptyState" style="display: none;">
+        <div class="empty-slate-icon">
+          <svg style="width: 44px; height: 44px; stroke-width: 1.5;" class="icon" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" x2="19" y1="8" y2="14"/><line x1="22" x2="16" y1="11" y2="11"/></svg>
+        </div>
+        <h3 id="emptyTitle">খাতা সম্পূর্ণ ফাঁকা রয়েছে</h3>
+        <p id="emptySub">কাস্টমার যুক্ত করতে নিচের <strong>"+ নতুন কাস্টমার"</strong> বাটনে চাপ দিন।</p>
+      </div>
+    </div>
+
+    <!-- TAB 2: অন্যান্য হিসাব (Daily Shop Expenses & Incomes) -->
+    <div id="tabOtherPage" style="display: none;">
+      <!-- Summary Cards for Other Accounts -->
+      <div class="other-summary-grid">
+        <div class="other-sum-card inc">
+          <div class="other-sum-title">আজকের বিক্রি/আয়</div>
+          <div class="other-sum-val" style="color: var(--paid);" id="todayOtherIncomeVal">৳ ০</div>
+        </div>
+        <div class="other-sum-card exp">
+          <div class="other-sum-title">আজকের মোট খরচ</div>
+          <div class="other-sum-val" style="color: var(--due);" id="todayOtherExpenseVal">৳ ০</div>
+        </div>
+        <div class="other-sum-card bal">
+          <div class="other-sum-title">আজকের ক্যাশ উদ্বৃত্ত</div>
+          <div class="other-sum-val" style="color: #0284c7;" id="todayOtherBalanceVal">৳ ০</div>
+        </div>
+      </div>
+
+      <!-- Action Row -->
+      <div class="action-row">
+        <button class="action-row-btn pdf" onclick="openOtherEntryModal()">
+          <svg class="icon icon-sm" viewBox="0 0 24 24"><line x1="12" x2="12" y1="5" y2="19"/><line x1="5" x2="19" y1="12" y2="12"/></svg>
+          <span>খরচ / আয় লিখুন</span>
+        </button>
+        <button class="action-row-btn backup" onclick="exportOtherExpensesPDF()">
+          <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>
+          <span>খরচ রিপোর্ট PDF</span>
+        </button>
+      </div>
+
+      <!-- Filter Bar for Other Accounts -->
+      <div class="filter-bar">
+        <button class="filter-btn active" id="otherFilterToday" onclick="setOtherFilter('today', this)">
+          <span>আজ</span>
+        </button>
+        <button class="filter-btn" id="otherFilterMonth" onclick="setOtherFilter('month', this)">
+          <span>এই মাস</span>
+        </button>
+        <button class="filter-btn" id="otherFilterAll" onclick="setOtherFilter('all', this)">
+          <span>সকল হিসাব</span>
+        </button>
+        <button class="filter-btn" id="otherFilterExpense" onclick="setOtherFilter('expense', this)">
+          <span style="color: var(--due);">খরচ</span>
+        </button>
+        <button class="filter-btn" id="otherFilterIncome" onclick="setOtherFilter('income', this)">
+          <span style="color: var(--paid);">আয়</span>
+        </button>
+      </div>
+
+      <!-- Other Entries List -->
+      <div id="otherList">
+        <!-- Rendered dynamically -->
+      </div>
+
+      <!-- Empty State for Other Accounts -->
+      <div class="empty-slate" id="emptyOtherState" style="display: none;">
+        <div class="empty-slate-icon">
+          <svg style="width: 44px; height: 44px; stroke-width: 1.5;" class="icon" viewBox="0 0 24 24"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
+        </div>
+        <h3 id="emptyOtherTitle">কোনো খরচ বা আয়ের রেকর্ড নেই</h3>
+        <p id="emptyOtherSub">দোকানের দৈনিক খরচ বা নগদ বিক্রি এন্ট্রি করতে নিচের <strong>"+ নতুন খরচ/আয়"</strong> বাটনে চাপ দিন।</p>
+      </div>
+    </div>
+
+    <!-- TAB 3: পূর্ণাঙ্গ সারসংক্ষেপ ও খতিয়ান (Reports & Control Center) -->
+    <div id="tabReportsPage" style="display: none;">
+      <!-- Overall Financial Summary Card -->
+      <div class="report-card">
+        <h3>
+          <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          দোকানের পূর্ণাঙ্গ আর্থিক চিত্র
+        </h3>
+        <div class="report-metric-row">
+          <span>গ্রাহকদের মোট বাকি দেওয়া:</span>
+          <strong id="repTotalGiven" style="color: var(--due);">৳ ০</strong>
+        </div>
+        <div class="report-metric-row">
+          <span>গ্রাহকদের কাছ থেকে মোট আদায়:</span>
+          <strong id="repTotalPaid" style="color: var(--paid);">৳ ০</strong>
+        </div>
+        <div class="report-metric-row">
+          <span>বর্তমান মোট বকেয়া বাকি (মার্কেট ডিউ):</span>
+          <strong id="repTotalDue" style="color: var(--due); font-size: 16px;">৳ ০</strong>
+        </div>
+        <div class="report-metric-row">
+          <span>দোকানের মোট অন্যান্য খরচ:</span>
+          <strong id="repTotalExpense" style="color: var(--due);">৳ ০</strong>
+        </div>
+        <div class="report-metric-row">
+          <span>দোকানের মোট নগদ আয়/বিক্রি:</span>
+          <strong id="repTotalIncome" style="color: var(--paid);">৳ ০</strong>
+        </div>
+      </div>
+
+      <!-- Report Export Actions -->
+      <div class="report-card">
+        <h3>
+          <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/></svg>
+          রিপোর্ট তৈরি ও এক্সপোর্ট
+        </h3>
+        <div class="report-btn-grid">
+          <button class="action-row-btn pdf" onclick="exportFullLedgerPDF()">
+            <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>
+            <span>বাকি খাতা PDF</span>
+          </button>
+          <button class="action-row-btn pdf" onclick="exportOtherExpensesPDF()">
+            <svg class="icon icon-sm" viewBox="0 0 24 24"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
+            <span>খরচ রিপোর্ট PDF</span>
+          </button>
+          <button class="action-row-btn backup" onclick="exportCSV()">
+            <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            <span>এক্সেল CSV ফাইল</span>
+          </button>
+          <button class="action-row-btn backup" onclick="downloadBackupJSON()">
+            <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+            <span>JSON ব্যাকআপ</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Data Reset & Security -->
+      <div class="report-card" style="border-color: #fecaca; background: #fffbfb;">
+        <h3 style="color: var(--due);">
+          <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" x2="12" y1="9" y2="13"/><line x1="12" x2="12.01" y1="17" y2="17"/></svg>
+          ডাটা নিরাপত্তা ও রিসেট
+        </h3>
+        <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;">
+          আপনার হিসাবগুলো নিয়মিত ব্যাকআপ রাখুন। প্রয়োজনে সকল হিসাব নতুন করে শুরু করতে নিচে ক্লিক করুন।
+        </p>
+        <button class="btn-clear-all" onclick="handleAllClear()">
+          <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
+          সকল ডাটা সম্পূর্ণ মুছুন (All Clear)
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <!-- Floating Action Button -->
+  <button class="fab-btn" id="mainFabBtn" onclick="handleFabClick()">
+    <svg class="icon icon-sm" id="fabIcon" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+    <span id="fabText">নতুন কাস্টমার</span>
+  </button>
+
+  <!-- Bottom Navigation Bar -->
+  <nav class="bottom-nav">
+    <button class="nav-tab-btn active" id="navBtnBaki" onclick="switchNavTab('baki')">
+      <svg class="icon" viewBox="0 0 24 24"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/></svg>
+      <span>বাকি খাতা</span>
+    </button>
+    <button class="nav-tab-btn" id="navBtnOther" onclick="switchNavTab('other')">
+      <svg class="icon" viewBox="0 0 24 24"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
+      <span>অন্যান্য হিসাব</span>
+    </button>
+    <button class="nav-tab-btn" id="navBtnReports" onclick="switchNavTab('reports')">
+      <svg class="icon" viewBox="0 0 24 24"><line x1="18" x2="18" y1="20" y2="10"/><line x1="12" x2="12" y1="20" y2="4"/><line x1="6" x2="6" y1="20" y2="14"/></svg>
+      <span>রিপোর্ট ও ব্যাকআপ</span>
+    </button>
+  </nav>
+
+  <!-- MODAL 1: নতুন কাস্টমার এন্ট্রি -->
+  <div class="modal-overlay" id="newCustomerModal" onclick="handleOverlayClick(event, 'newCustomerModal')">
+    <div class="modal-sheet">
+      <div class="sheet-handle"></div>
+      <div class="modal-head">
+        <h2>
+          <svg class="icon" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" x2="19" y1="8" y2="14"/><line x1="22" x2="16" y1="11" y2="11"/></svg>
+          নতুন কাস্টমার এন্ট্রি
+        </h2>
+        <button class="btn-close" onclick="closeModal('newCustomerModal')">
+          <svg class="icon icon-sm" viewBox="0 0 24 24"><line x1="18" x2="6" y1="6" y2="18"/><line x1="6" x2="18" y1="6" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="modal-scroll">
+        <form onsubmit="handleSaveCustomer(event)">
+          <!-- Avatar Uploader Row -->
+          <div class="avatar-upload-box">
+            <div class="avatar-preview-wrap" id="newCustAvatarWrap" onclick="triggerNewCustomerAvatarInput()" title="ছবি নির্বাচন করতে ক্লিক করুন">
+              <img id="newCustAvatarPreview" class="avatar-preview-img" style="display:none;" alt="ছবি">
+              <span id="newCustAvatarPlaceholder" style="display: flex; align-items: center; justify-content: center;">
+                <svg style="width:24px;height:24px;color:#94a3b8;" class="icon" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              </span>
+            </div>
+            <div class="avatar-upload-btns">
+              <button type="button" class="avatar-btn-choose" onclick="triggerNewCustomerAvatarInput()">
+                <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                কাস্টমারের ছবি দিন
+              </button>
+              <button type="button" id="btnRemoveNewAvatar" class="avatar-btn-remove" style="display:none;" onclick="removeNewCustomerAvatar()">
+                ছবি বাদ দিন
+              </button>
+            </div>
+            <input type="file" id="newCustAvatarInput" accept="image/*" style="display:none;" onchange="handleNewCustomerAvatarSelected(event)">
+          </div>
+
+          <div class="form-row">
+            <label class="form-label">কাস্টমারের নাম <span style="color: var(--due);">*</span></label>
+            <input type="text" id="custName" class="form-input" placeholder="কাস্টমারের পূর্ণ নাম লিখুন" required autofocus>
+          </div>
+          <div class="form-row">
+            <label class="form-label">মোবাইল নম্বর (ঐচ্ছিক)</label>
+            <input type="tel" id="custPhone" class="form-input" placeholder="01xxxxxxxxx">
+          </div>
+          <div class="form-row">
+            <label class="form-label">ঠিকানা / এলাকা (ঐচ্ছিক)</label>
+            <input type="text" id="custAddress" class="form-input" placeholder="গ্রাম / বাজার সংলগ্ন">
+          </div>
+          <div class="form-row">
+            <label class="form-label">পূর্বের কোনো বাকি থাকলে (টাকা ৳)</label>
+            <input type="number" id="custInitialDue" class="form-input" placeholder="0" min="0" step="any">
+          </div>
+          <button type="submit" class="btn-submit" style="margin-top: 10px;">
+            <svg class="icon icon-sm" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+            কাস্টমার সংরক্ষণ করুন
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 2: কাস্টমার বাকি খাতা ও টাকা এন্ট্রি (UNSLOPPED & STREAMLINED) -->
+  <div class="modal-overlay" id="customerDetailModal" onclick="handleOverlayClick(event, 'customerDetailModal')">
+    <div class="modal-sheet">
+      <div class="sheet-handle"></div>
+      <div class="modal-head">
+        <h2>
+          <svg class="icon" viewBox="0 0 24 24"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/></svg>
+          গ্রাহক লেজার খাতা
+        </h2>
+        <button class="btn-close" onclick="closeModal('customerDetailModal')">
+          <svg class="icon icon-sm" viewBox="0 0 24 24"><line x1="18" x2="6" y1="6" y2="18"/><line x1="6" x2="18" y1="6" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="modal-scroll">
+        <!-- Compact Customer Header Card -->
+        <div class="compact-hero-box">
+          <div class="hero-cust-profile">
+            <div class="hero-avatar-wrap" onclick="triggerDetailAvatarUpload()" title="ছবি পরিবর্তন করুন">
+              <img id="detailCustAvatarImg" class="hero-avatar-img" src="" style="display:none;" alt="ছবি">
+              <div id="detailCustAvatarInitial" class="hero-avatar-initial">ক</div>
+              <div class="hero-avatar-cam-badge">
+                <svg style="width:10px;height:10px;stroke-width:2.5;" class="icon" viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+              </div>
+            </div>
+            <div>
+              <div class="hero-name" id="detailCustName">-</div>
+              <div class="hero-phone" id="detailCustPhone">মোবাইল: -</div>
+            </div>
+          </div>
+          <div class="hero-due-badge">
+            <div class="hero-due-amt due" id="detailBalanceVal">৳ ০</div>
+            <div class="hero-due-tag" id="detailBalanceTag">বর্তমান বাকি</div>
+          </div>
+        </div>
+        <input type="file" id="detailAvatarInput" accept="image/*" style="display:none;" onchange="handleDetailAvatarSelected(event)">
+
+        <!-- 5 Utility Micro Buttons -->
+        <div class="hero-actions-grid">
+          <a href="#" id="callBtn" class="micro-btn call">
+            <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            কল দিন
+          </a>
+          <button type="button" id="waBtn" class="micro-btn wa" onclick="sendWhatsAppCustomerStatement(activeCustomerId)" title="হোয়াটসঅ্যাপে বিস্তারিত বাকি হিসাব পাঠান">
+            <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            তাগাদা
+          </button>
+          <button type="button" class="micro-btn pdf" onclick="exportCustomerStatementPDF()">
+            <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>
+            রসিদ PDF
+          </button>
+          <button type="button" class="micro-btn edit" onclick="openEditCustomerModal(activeCustomerId)" title="কাস্টমার ও ছবি এডিট">
+            <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+            এডিট
+          </button>
+          <button type="button" class="micro-btn del" onclick="deleteCurrentCustomer()">
+            <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
+            মুছুন
+          </button>
+        </div>
+
+        <!-- Entry Card -->
+        <div class="entry-card">
+          <form onsubmit="handleSaveTransaction(event)">
+            <!-- Pill Switch -->
+            <div class="pill-segmented">
+              <button type="button" id="btnTypeDue" class="pill-opt active due" onclick="setTxType('due')">
+                <svg class="icon icon-sm" viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/></svg>
+                বাকি দিলাম (-)
+              </button>
+              <button type="button" id="btnTypePaid" class="pill-opt paid" onclick="setTxType('paid')">
+                <svg class="icon icon-sm" viewBox="0 0 24 24"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/></svg>
+                জমা পেলাম (+)
+              </button>
+            </div>
+
+            <!-- Currency Amount -->
+            <div class="amount-input-box">
+              <span class="taka-symbol">৳</span>
+              <input type="number" id="txAmount" class="amount-field" placeholder="টাকার পরিমাণ লিখুন" min="1" step="any" required autofocus>
+            </div>
+
+            <!-- Chips -->
+            <div class="chips-grid">
+              <button type="button" class="chip-btn" onclick="addAmount(100)">+১০০</button>
+              <button type="button" class="chip-btn" onclick="addAmount(500)">+৫০০</button>
+              <button type="button" class="chip-btn" onclick="addAmount(1000)">+১,০০০</button>
+              <button type="button" class="chip-btn" onclick="addAmount(2000)">+২,০০০</button>
+            </div>
+
+            <!-- Note / Description with Dynamic Auto-suggestions from Past -->
+            <div class="form-row" style="margin-bottom: 6px;">
+              <label class="form-label">বিবরণ / মালের নাম (ঐচ্ছিক)</label>
+              <input type="text" id="txNote" class="form-input" placeholder="যেমন: চাল, তেল বা অন্যকিছু" autocomplete="off" oninput="filterTxNoteSuggestions()">
+              <div id="txNoteHistoryWrap" class="note-history-wrap" style="display: none;">
+                <div class="note-history-title">
+                  <svg class="icon" style="width:11px;height:11px;stroke-width:2.5;color:var(--primary);" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                  পূর্বের বিবরণ থেকে দ্রুত বাছুন:
+                </div>
+                <div class="note-history-chips" id="txNoteChipsBar"></div>
+              </div>
+            </div>
+
+            <div class="form-row" style="margin-bottom: 10px;">
+              <label class="form-label">তারিখ</label>
+              <input type="date" id="txDate" class="form-input" style="background: white;">
+            </div>
+
+            <button type="submit" class="btn-submit" id="txSubmitBtn" style="background: var(--due);">
+              <svg class="icon icon-sm" viewBox="0 0 24 24"><line x1="12" x2="12" y1="5" y2="19"/><line x1="5" x2="19" y1="12" y2="12"/></svg>
+              বাকি এন্ট্রি যুক্ত করুন
+            </button>
+          </form>
+        </div>
+
+        <!-- History -->
+        <div class="history-head-row">
+          <h4>লেনদেন ইতিহাস (<span id="txCount">০</span>)</h4>
+          <span style="font-size: 11px; color: var(--text-muted);">সর্বশেষ উপরে</span>
+        </div>
+        <div class="history-items-container" id="txHistoryList">
+          <!-- Rendered dynamically -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: কাস্টমার তথ্য ও ছবি এডিট -->
+  <div class="modal-overlay" id="editCustomerModal" onclick="handleOverlayClick(event, 'editCustomerModal')">
+    <div class="modal-sheet">
+      <div class="sheet-handle"></div>
+      <div class="modal-head">
+        <h2>
+          <svg class="icon" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+          কাস্টমার তথ্য ও ছবি এডিট
+        </h2>
+        <button class="btn-close" onclick="closeModal('editCustomerModal')">
+          <svg class="icon icon-sm" viewBox="0 0 24 24"><line x1="18" x2="6" y1="6" y2="18"/><line x1="6" x2="18" y1="6" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="modal-scroll">
+        <form onsubmit="handleSaveEditCustomer(event)">
+          <!-- Avatar Edit Box -->
+          <div class="avatar-upload-box">
+            <div class="avatar-preview-wrap" onclick="document.getElementById('editCustAvatarInput').click()" title="ছবি পরিবর্তন করতে ট্যাপ করুন">
+              <img id="editCustAvatarPreview" class="avatar-preview-img" src="" style="display:none;" alt="প্রিভিউ">
+              <div id="editCustAvatarPlaceholder" class="avatar-placeholder-cam">
+                <svg class="icon" viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                <span>ছবি</span>
+              </div>
+            </div>
+            <div class="avatar-upload-info">
+              <div class="avatar-upload-title">কাস্টমারের ছবি</div>
+              <div class="avatar-upload-sub">ছবি পরিবর্তন করতে ট্যাপ করুন</div>
+              <div style="display: flex; gap: 8px; margin-top: 6px;">
+                <button type="button" class="btn-secondary" style="padding: 4px 10px; font-size: 11px;" onclick="document.getElementById('editCustAvatarInput').click()">
+                  <svg class="icon icon-sm" style="width:12px;height:12px;" viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                  নতুন ছবি
+                </button>
+                <button type="button" id="btnRemoveEditAvatar" class="btn-secondary" style="padding: 4px 10px; font-size: 11px; color: var(--due); border-color: #fca5a5; display:none;" onclick="removeEditCustomerAvatar()">
+                  <svg class="icon icon-sm" style="width:12px;height:12px;" viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/></svg>
+                  ছবি মুছুন
+                </button>
+              </div>
+            </div>
+            <input type="file" id="editCustAvatarInput" accept="image/*" style="display:none;" onchange="handleEditCustomerAvatarSelected(event)">
+          </div>
+
+          <div class="form-row">
+            <label class="form-label">কাস্টমারের নাম <span style="color: var(--due);">*</span></label>
+            <input type="text" id="editCustName" class="form-input" required placeholder="নাম লিখুন">
+          </div>
+          <div class="form-row">
+            <label class="form-label">মোবাইল নম্বর (ঐচ্ছিক)</label>
+            <input type="tel" id="editCustPhone" class="form-input" placeholder="০১XXXXXXXXX">
+          </div>
+          <div class="form-row">
+            <label class="form-label">ঠিকানা / পরিচিতি (ঐচ্ছিক)</label>
+            <input type="text" id="editCustAddress" class="form-input" placeholder="যেমন: পূর্ব পাড়া, মাস্টার বাড়ি">
+          </div>
+          <button type="submit" class="btn-submit" style="margin-top: 14px;">
+            <svg class="icon icon-sm" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+            আপডেট ও সেভ করুন
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 3: ডাটা এক্সপোর্ট, ব্যাকআপ ও অল ক্লিয়ার -->
+  <div class="modal-overlay" id="backupModal" onclick="handleOverlayClick(event, 'backupModal')">
+    <div class="modal-sheet">
+      <div class="sheet-handle"></div>
+      <div class="modal-head">
+        <h2>
+          <svg class="icon" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
+          ডাটা এক্সপোর্ট ও ব্যাকআপ
+        </h2>
+        <button class="btn-close" onclick="closeModal('backupModal')">
+          <svg class="icon icon-sm" viewBox="0 0 24 24"><line x1="18" x2="6" y1="6" y2="18"/><line x1="6" x2="18" y1="6" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="modal-scroll">
+        <!-- 1. PDF Report -->
+        <div class="backup-row-item">
+          <div class="backup-row-info">
+            <h4>সম্পূর্ণ বাকি খাতার PDF রিপোর্ট</h4>
+            <p>সকল কাস্টমারের হিসাবসহ প্রিন্ট ও PDF ফাইল</p>
+          </div>
+          <button class="btn-action-sm" onclick="exportFullLedgerPDF()">
+            <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>
+            PDF
+          </button>
+        </div>
+
+        <!-- 2. Excel CSV -->
+        <div class="backup-row-item">
+          <div class="backup-row-info">
+            <h4>এক্সেল (Excel / CSV) স্প্রেডশিট</h4>
+            <p>মাইক্রোসফট এক্সেলে দেখার মতো টেবিল ফাইল</p>
+          </div>
+          <button class="btn-action-sm secondary" onclick="exportCSV()">
+            <svg class="icon icon-sm" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M3 15h18"/><path d="M9 3v18"/><path d="M15 3v18"/></svg>
+            এক্সেল
+          </button>
+        </div>
+
+        <!-- 3. Full JSON Backup -->
+        <div class="backup-row-item">
+          <div class="backup-row-info">
+            <h4>সম্পূর্ণ ব্যাকআপ ফাইল (.json)</h4>
+            <p>১০০% ডাটা ব্যাকআপ ফাইল সেভ করে রাখুন</p>
+          </div>
+          <button class="btn-action-sm" onclick="exportData()">
+            <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+            ডাউনলোড
+          </button>
+        </div>
+
+        <!-- 4. Restore -->
+        <div class="backup-row-item">
+          <div class="backup-row-info">
+            <h4>ব্যাকআপ ফাইল রিস্টোর করুন</h4>
+            <p>আগের সেভ করা ফাইল থেকে হিসাব ফিরিয়ে আনুন</p>
+          </div>
+          <button class="btn-action-sm secondary" onclick="triggerRestoreInput()">
+            <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg>
+            ফাইল বাছুন
+          </button>
+          <input type="file" id="restoreFileInput" accept=".json" style="display: none;" onchange="handleRestoreFile(event)">
+        </div>
+
+        <!-- 5. WhatsApp -->
+        <div class="backup-row-item">
+          <div class="backup-row-info">
+            <h4>হোয়াটসঅ্যাপে ব্যাকআপ পাঠান</h4>
+            <p>সকল কাস্টমারের তালিকার টেক্সট রিপোর্ট পাঠান</p>
+          </div>
+          <button class="btn-action-sm" style="background: #16a34a;" onclick="shareViaWhatsApp()">
+            <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            হোয়াটসঅ্যাপ
+          </button>
+        </div>
+
+        <!-- 6. ALL CLEAR -->
+        <div class="backup-row-item" style="background: #fef2f2; border: 1px dashed #fca5a5; margin-top: 14px;">
+          <div class="backup-row-info">
+            <h4 style="color: var(--due);">সকল ডাটা মুছুন (All Clear)</h4>
+            <p style="color: #991b1b;">সকল কাস্টমার ও হিসাব সম্পূর্ণ মুছে ফ্রেশ করুন</p>
+          </div>
+          <button class="btn-action-sm danger" onclick="handleAllClear()">
+            <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/></svg>
+            সব মুছুন
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 4: অন্যান্য হিসাব (দোকানের খরচ বা আয় এন্ট্রি) -->
+  <div class="modal-overlay" id="otherEntryModal" onclick="handleOverlayClick(event, 'otherEntryModal')">
+    <div class="modal-sheet">
+      <div class="sheet-handle"></div>
+      <div class="modal-head">
+        <h2>
+          <svg class="icon" viewBox="0 0 24 24"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
+          দোকানের খরচ বা আয় এন্ট্রি
+        </h2>
+        <button class="btn-close" onclick="closeModal('otherEntryModal')">
+          <svg class="icon icon-sm" viewBox="0 0 24 24"><line x1="18" x2="6" y1="6" y2="18"/><line x1="6" x2="18" y1="6" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="modal-scroll">
+        <form onsubmit="handleSaveOtherEntry(event)">
+          <!-- Segmented Toggle -->
+          <div class="pill-segmented">
+            <button type="button" id="btnOtherTypeExpense" class="pill-opt active due" onclick="setOtherType('expense')">
+              <svg class="icon icon-sm" viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/></svg>
+              দোকান খরচ (-)
+            </button>
+            <button type="button" id="btnOtherTypeIncome" class="pill-opt paid" onclick="setOtherType('income')">
+              <svg class="icon icon-sm" viewBox="0 0 24 24"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/></svg>
+              দোকানের আয় / বিক্রি (+)
+            </button>
+          </div>
+
+          <!-- Category Selection -->
+          <div class="form-row">
+            <label class="form-label">খরচ/আয়ের খাত বা ক্যাটাগরি <span style="color: var(--due);">*</span></label>
+            <select id="otherCategorySelect" class="form-input" style="background: white;" required>
+            </select>
+          </div>
+
+          <!-- Currency Amount -->
+          <div class="amount-input-box">
+            <span class="taka-symbol">৳</span>
+            <input type="number" id="otherAmountInput" class="amount-field" placeholder="টাকার পরিমাণ লিখুন" min="1" step="any" required autofocus>
+          </div>
+
+          <!-- Chips -->
+          <div class="chips-grid">
+            <button type="button" class="chip-btn" onclick="addOtherAmount(100)">+১০০</button>
+            <button type="button" class="chip-btn" onclick="addOtherAmount(500)">+৫০০</button>
+            <button type="button" class="chip-btn" onclick="addOtherAmount(1000)">+১,০০০</button>
+            <button type="button" class="chip-btn" onclick="addOtherAmount(5000)">+৫,০০০</button>
+          </div>
+
+          <!-- Description / Note with Past Dynamic Suggestions -->
+          <div class="form-row" style="margin-top: 10px; margin-bottom: 6px;">
+            <label class="form-label">বিবরণ / নোট (ঐচ্ছিক)</label>
+            <input type="text" id="otherNoteInput" class="form-input" placeholder="যেমন: দোকান ভাড়া, বিদ্যুৎ বিল বা অন্যকিছু" autocomplete="off" oninput="filterOtherNoteSuggestions()">
+            <div id="otherNoteHistoryWrap" class="note-history-wrap" style="display: none;">
+              <div class="note-history-title">
+                <svg class="icon" style="width:11px;height:11px;stroke-width:2.5;color:var(--primary);" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                পূর্বের বিবরণ থেকে দ্রুত বাছুন:
+              </div>
+              <div class="note-history-chips" id="otherNoteChipsBar"></div>
+            </div>
+          </div>
+
+          <!-- Date -->
+          <div class="form-row">
+            <label class="form-label">তারিখ</label>
+            <input type="date" id="otherDateInput" class="form-input" required>
+          </div>
+
+          <button type="submit" id="btnSaveOtherSubmit" class="btn-submit" style="margin-top: 10px;">
+            <svg class="icon icon-sm" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+            খরচ সংরক্ষণ করুন
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hidden Print / PDF Container -->
+  <div id="printContainer"></div>
+
+  <!-- Toast -->
+  <div class="toast" id="toastMsg">
+    <svg class="icon icon-sm" style="color: #4ade80;" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+    <span id="toastText">সফলভাবে সম্পন্ন হয়েছে</span>
+  </div>
+
+  <script>
+    // Pure, clean state without mock data
+    const STORAGE_KEY = 'dukan_baki_data_v2';
+    let appData = {
+      shopName: 'দোকানের বাকি খাতা',
+      customers: [],
+      otherEntries: []
+    };
+    let currentNavTab = 'baki';
+    let currentFilter = 'all';
+    let activeCustomerId = null;
+    let currentTxType = 'due';
+    let currentOtherType = 'expense';
+    let currentOtherFilter = 'today';
+
+    function roundAmount(val) {
+      return Math.round((Number(val || 0) + Number.EPSILON) * 100) / 100;
+    }
+
+    function loadInitialData() {
+      let loaded = false;
+      const saved = localStorage.getItem(STORAGE_KEY);
+      
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved);
+          if (parsed && Array.isArray(parsed.customers)) {
+            appData = parsed;
+            loaded = true;
+          }
+        } catch (e) {
+          console.error(e);
+        }
+      }
+
+      if (!loaded && window.AndroidBridge && typeof window.AndroidBridge.readFromFile === 'function') {
+        try {
+          const nativeData = window.AndroidBridge.readFromFile();
+          if (nativeData && nativeData.trim()) {
+            const parsed = JSON.parse(nativeData);
+            if (parsed && Array.isArray(parsed.customers)) {
+              appData = parsed;
+              localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
+              loaded = true;
+              showToast('ফোন ফাইল থেকে ব্যাকআপ ডাটা পাওয়া গেছে');
+            }
+          }
+        } catch (e) {
+          console.error(e);
+        }
+      }
+
+      if (!loaded) {
+        appData = {
+          shopName: 'দোকানের বাকি খাতা',
+          customers: [],
+          otherEntries: []
+        };
+        saveData();
+      }
+
+      if (!Array.isArray(appData.customers)) {
+        appData.customers = [];
+      }
+      if (!Array.isArray(appData.otherEntries)) {
+        appData.otherEntries = [];
+      }
+      if (!Array.isArray(appData.savedTxNotes)) {
+        appData.savedTxNotes = [];
+      }
+      if (!Array.isArray(appData.savedOtherNotes)) {
+        appData.savedOtherNotes = [];
+      }
+    }
+
+    function saveData() {
+      const jsonStr = JSON.stringify(appData);
+      try {
+        localStorage.setItem(STORAGE_KEY, jsonStr);
+      } catch (storageErr) {
+        console.warn('LocalStorage save error:', storageErr);
+      }
+
+      if (window.AndroidBridge && typeof window.AndroidBridge.saveToFile === 'function') {
+        try {
+          window.AndroidBridge.saveToFile(jsonStr);
+        } catch (e) {
+          console.error(e);
+        }
+      }
+
+      renderDashboard();
+      if (currentNavTab === 'other') {
+        renderOtherAccounts();
+      } else if (currentNavTab === 'reports') {
+        renderReportsPage();
+      }
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toastMsg');
+      document.getElementById('toastText').innerText = msg;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2000);
+    }
+
+    function getCustomerStats(cust) {
+      let totalDue = 0;
+      let totalPaid = 0;
+      if (cust.transactions && Array.isArray(cust.transactions)) {
+        cust.transactions.forEach(t => {
+          const amt = parseFloat(t.amount) || 0;
+          if (t.type === 'due') {
+            totalDue += amt;
+          } else if (t.type === 'paid') {
+            totalPaid += amt;
+          }
+        });
+      }
+      totalDue = roundAmount(totalDue);
+      totalPaid = roundAmount(totalPaid);
+      const balance = roundAmount(totalDue - totalPaid);
+      return { totalDue, totalPaid, balance };
+    }
+
+    function getCustomerBalance(cust) {
+      return getCustomerStats(cust).balance;
+    }
+
+    function renderDashboard() {
+      document.getElementById('shopNameDisplay').innerText = appData.shopName || 'দোকানের বাকি খাতা';
+      
+      let grandTotalDue = 0;
+      let grandTotalGiven = 0;
+      let grandTotalPaid = 0;
+      let dueCount = 0;
+      let paidCount = 0;
+
+      appData.customers.forEach(c => {
+        const stats = getCustomerStats(c);
+        grandTotalGiven += stats.totalDue;
+        grandTotalPaid += stats.totalPaid;
+        const bal = stats.balance;
+        if (bal > 0) {
+          grandTotalDue += bal;
+          dueCount++;
+        } else {
+          paidCount++;
+        }
+      });
+
+      grandTotalDue = roundAmount(grandTotalDue);
+      grandTotalGiven = roundAmount(grandTotalGiven);
+      grandTotalPaid = roundAmount(grandTotalPaid);
+
+      document.getElementById('totalDueVal').innerText = '৳ ' + grandTotalDue.toLocaleString('bn-BD');
+      document.getElementById('totalCustomersVal').innerText = appData.customers.length + ' জন';
+      document.getElementById('totalGivenVal').innerText = '৳ ' + grandTotalGiven.toLocaleString('bn-BD');
+      document.getElementById('totalReceivedVal').innerText = '৳ ' + grandTotalPaid.toLocaleString('bn-BD');
+
+      document.getElementById('countAll').innerText = appData.customers.length;
+      document.getElementById('countDue').innerText = dueCount;
+      document.getElementById('countPaid').innerText = paidCount;
+
+      renderCustomerList();
+    }
+
+    function renderCustomerList() {
+      const search = (document.getElementById('searchInput').value || '').trim().toLowerCase();
+      const listContainer = document.getElementById('customerList');
+      const emptyState = document.getElementById('emptyState');
+
+      let filtered = appData.customers.filter(c => {
+        const matchName = (c.name || '').toLowerCase().includes(search);
+        const matchPhone = (c.phone || '').toLowerCase().includes(search);
+        const matchAddr = (c.address || '').toLowerCase().includes(search);
+        if (!matchName && !matchPhone && !matchAddr) return false;
+
+        const bal = getCustomerBalance(c);
+        if (currentFilter === 'due' && bal <= 0) return false;
+        if (currentFilter === 'paid' && bal > 0) return false;
+        return true;
+      });
+
+      filtered.sort((a, b) => getCustomerBalance(b) - getCustomerBalance(a));
+
+      listContainer.innerHTML = '';
+
+      if (filtered.length === 0) {
+        emptyState.style.display = 'block';
+        if (search) {
+          document.getElementById('emptyTitle').innerText = '"' + search + '" পাওয়া যায়নি';
+          document.getElementById('emptySub').innerText = 'সঠিক নাম বা নম্বর দিয়ে পুনরায় সন্ধান করুন।';
+        } else {
+          document.getElementById('emptyTitle').innerText = 'খাতা সম্পূর্ণ ফাঁকা রয়েছে';
+          document.getElementById('emptySub').innerText = 'কাস্টমার যুক্ত করতে নিচের "+ নতুন কাস্টমার" বাটনে চাপ দিন।';
+        }
+      } else {
+        emptyState.style.display = 'none';
+        filtered.forEach(cust => {
+          const bal = getCustomerBalance(cust);
+          const initial = (cust.name || 'ক').trim().charAt(0);
+          
+          let lastTxText = 'কোন লেনদেন নেই';
+          if (cust.transactions && cust.transactions.length > 0) {
+            const last = cust.transactions[cust.transactions.length - 1];
+            const typeStr = last.type === 'due' ? 'বাকি' : 'জমা';
+            lastTxText = `শেষ: ${typeStr} ৳${roundAmount(last.amount)} (${last.date || ''})`;
+          }
+
+          const card = document.createElement('div');
+          card.className = 'customer-card';
+          card.onclick = () => openCustomerDetailModal(cust.id);
+          card.innerHTML = `
+            <div class="customer-left">
+              ${cust.avatar 
+                ? `<img class="customer-avatar-img" src="${cust.avatar}" alt="${escapeHtml(cust.name)}">` 
+                : `<div class="customer-badge-initial">${initial}</div>`}
+              <div class="customer-info">
+                <div class="customer-name">${escapeHtml(cust.name)}</div>
+                <div class="customer-meta">
+                  <span>${escapeHtml(cust.phone || 'নম্বর নেই')}</span>
+                  <span>•</span>
+                  <span>${escapeHtml(lastTxText)}</span>
+                </div>
+              </div>
+            </div>
+            <div class="customer-right">
+              <div class="balance-display">
+                ${bal > 0 
+                  ? `<div class="balance-val due">৳ ${bal.toLocaleString('bn-BD')}</div><div class="balance-sub" style="color: var(--due);">বাকি</div>` 
+                  : `<div class="balance-val paid">৳ ০</div><div class="balance-sub" style="color: var(--paid);">পরিশোধ</div>`}
+              </div>
+              <button class="btn-trash" onclick="directDeleteCustomer(event, '${cust.id}', '${escapeHtml(cust.name)}')" title="মুছুন">
+                <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
+              </button>
+            </div>
+          `;
+          listContainer.appendChild(card);
+        });
+      }
+    }
+
+    function escapeHtml(text) {
+      if (!text) return '';
+      return text.replace(/[&<>"']/g, function(m) {
+        return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[m];
+      });
+    }
+
+    function directDeleteCustomer(event, custId, custName) {
+      event.stopPropagation();
+      if (confirm(`আপনি কি "${custName}" এবং তার সকল বাকি হিসাব মুছে ফেলতে চান?`)) {
+        appData.customers = appData.customers.filter(c => c.id !== custId);
+        saveData();
+        showToast('কাস্টমার মুছে ফেলা হয়েছে');
+      }
+    }
+
+    function handleAllClear() {
+      if (!confirm("আপনি কি সমস্ত কাস্টমার, বাকি হিসাব এবং অন্যান্য সকল খরচের হিসাব সম্পূর্ণ মুছে ফেলতে চান?")) return;
+      if (!confirm("সতর্কতা: ডিলিট করার পর কোনো হিসাব আর ফিরে পাওয়া যাবে না। নিশ্চিত?")) return;
+
+      appData.customers = [];
+      appData.otherEntries = [];
+      saveData();
+      closeModal('backupModal');
+      showToast('সকল ডাটা মুছে ফেলা হয়েছে');
+    }
+
+    function handleSearch() {
+      if (currentNavTab === 'baki') {
+        renderCustomerList();
+      } else if (currentNavTab === 'other') {
+        renderOtherList();
+      }
+    }
+
+    function setFilter(type, btn) {
+      currentFilter = type;
+      document.querySelectorAll('.filter-btn').forEach(el => el.classList.remove('active'));
+      btn.classList.add('active');
+      renderCustomerList();
+    }
+
+    function openModal(id) {
+      document.getElementById(id).classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).classList.remove('open');
+      document.body.style.overflow = '';
+      if (id === 'customerDetailModal') {
+        activeCustomerId = null;
+      }
+      if (id === 'newCustomerModal') {
+        removeNewCustomerAvatar();
+      }
+    }
+
+    function handleOverlayClick(event, id) {
+      if (event.target.id === id) {
+        closeModal(id);
+      }
+    }
+
+    /* Customer Photo Processing & Management */
+    let tempNewCustomerAvatar = '';
+    let tempNewCustomerObjectUrl = '';
+
+    function triggerNewCustomerAvatarInput() {
+      const fileInput = document.getElementById('newCustAvatarInput');
+      if (fileInput) {
+        fileInput.value = '';
+        fileInput.click();
+      }
+    }
+
+    function processImageFile(file, maxSide, quality, callback) {
+      if (!file) return;
+
+      try {
+        const objUrl = URL.createObjectURL(file);
+        const img = new Image();
+        img.onload = function() {
+          try {
+            const w = img.naturalWidth || img.width || 128;
+            const h = img.naturalHeight || img.height || 128;
+            const minDim = Math.min(w, h);
+            const sx = (w - minDim) / 2;
+            const sy = (h - minDim) / 2;
+
+            const canvas = document.createElement('canvas');
+            const targetSize = maxSide || 128;
+            canvas.width = targetSize;
+            canvas.height = targetSize;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, sx, sy, minDim, minDim, 0, 0, targetSize, targetSize);
+            const dataUrl = canvas.toDataURL('image/jpeg', quality || 0.75);
+            URL.revokeObjectURL(objUrl);
+            callback(dataUrl);
+          } catch(canvasErr) {
+            console.warn('Canvas error, fallback to FileReader:', canvasErr);
+            URL.revokeObjectURL(objUrl);
+            fallbackFileReader(file, callback);
+          }
+        };
+        img.onerror = function() {
+          URL.revokeObjectURL(objUrl);
+          fallbackFileReader(file, callback);
+        };
+        img.src = objUrl;
+      } catch (err) {
+        fallbackFileReader(file, callback);
+      }
+    }
+
+    function fallbackFileReader(file, callback) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        callback(e.target.result);
+      };
+      reader.onerror = function() {
+        showToast('ছবি পড়তে সমস্যা হয়েছে');
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function handleNewCustomerAvatarSelected(event) {
+      const file = event.target.files && event.target.files[0];
+      if (!file) return;
+
+      // 1. Show immediate instant preview via ObjectURL
+      try {
+        if (tempNewCustomerObjectUrl) {
+          URL.revokeObjectURL(tempNewCustomerObjectUrl);
+        }
+        tempNewCustomerObjectUrl = URL.createObjectURL(file);
+        const previewImg = document.getElementById('newCustAvatarPreview');
+        const placeholder = document.getElementById('newCustAvatarPlaceholder');
+        const removeBtn = document.getElementById('btnRemoveNewAvatar');
+        
+        previewImg.src = tempNewCustomerObjectUrl;
+        previewImg.style.display = 'block';
+        if (placeholder) placeholder.style.display = 'none';
+        if (removeBtn) removeBtn.style.display = 'inline-block';
+      } catch (err) {
+        console.warn('createObjectURL error:', err);
+      }
+
+      // 2. Compress and save base64
+      processImageFile(file, 140, 0.75, function(base64Url) {
+        tempNewCustomerAvatar = base64Url;
+        const previewImg = document.getElementById('newCustAvatarPreview');
+        if (previewImg) {
+          previewImg.src = base64Url;
+          previewImg.style.display = 'block';
+        }
+        const placeholder = document.getElementById('newCustAvatarPlaceholder');
+        if (placeholder) placeholder.style.display = 'none';
+        const removeBtn = document.getElementById('btnRemoveNewAvatar');
+        if (removeBtn) removeBtn.style.display = 'inline-block';
+        
+        if (tempNewCustomerObjectUrl) {
+          try { URL.revokeObjectURL(tempNewCustomerObjectUrl); } catch(e){}
+          tempNewCustomerObjectUrl = '';
+        }
+      });
+    }
+
+    function removeNewCustomerAvatar() {
+      tempNewCustomerAvatar = '';
+      if (tempNewCustomerObjectUrl) {
+        try { URL.revokeObjectURL(tempNewCustomerObjectUrl); } catch(e){}
+        tempNewCustomerObjectUrl = '';
+      }
+      const previewImg = document.getElementById('newCustAvatarPreview');
+      if (previewImg) {
+        previewImg.src = '';
+        previewImg.style.display = 'none';
+      }
+      const placeholder = document.getElementById('newCustAvatarPlaceholder');
+      if (placeholder) placeholder.style.display = 'flex';
+      const removeBtn = document.getElementById('btnRemoveNewAvatar');
+      if (removeBtn) removeBtn.style.display = 'none';
+      const fileInput = document.getElementById('newCustAvatarInput');
+      if (fileInput) fileInput.value = '';
+    }
+
+    function updateDetailAvatarUI(cust) {
+      const imgEl = document.getElementById('detailCustAvatarImg');
+      const initEl = document.getElementById('detailCustAvatarInitial');
+      if (cust.avatar) {
+        imgEl.src = cust.avatar;
+        imgEl.style.display = 'block';
+        initEl.style.display = 'none';
+      } else {
+        imgEl.style.display = 'none';
+        initEl.style.display = 'flex';
+        initEl.innerText = (cust.name || 'ক').trim().charAt(0);
+      }
+    }
+
+    function triggerDetailAvatarUpload() {
+      const fileInput = document.getElementById('detailAvatarInput');
+      if (fileInput) {
+        fileInput.value = '';
+        fileInput.click();
+      }
+    }
+
+    function handleDetailAvatarSelected(event) {
+      const file = event.target.files && event.target.files[0];
+      if (!file) return;
+
+      const cust = appData.customers.find(c => String(c.id) === String(activeCustomerId));
+      if (!cust) return;
+
+      // 1. Show instant preview in the detail modal hero
+      try {
+        const previewUrl = URL.createObjectURL(file);
+        const imgEl = document.getElementById('detailCustAvatarImg');
+        const initEl = document.getElementById('detailCustAvatarInitial');
+        if (imgEl) {
+          imgEl.src = previewUrl;
+          imgEl.style.display = 'block';
+        }
+        if (initEl) initEl.style.display = 'none';
+      } catch (err) {
+        console.warn('createObjectURL error:', err);
+      }
+
+      // 2. Compress and persist in real time
+      processImageFile(file, 140, 0.75, function(base64Url) {
+        cust.avatar = base64Url;
+        saveData();
+        updateDetailAvatarUI(cust);
+        renderCustomerList();
+        showToast('কাস্টমারের ছবি সাথে সাথে সেভ হয়েছে');
+        event.target.value = '';
+      });
+    }
+
+    let tempEditCustomerAvatar = '';
+
+    function openEditCustomerModal(custId) {
+      const targetId = custId || activeCustomerId;
+      const cust = appData.customers.find(c => String(c.id) === String(targetId));
+      if (!cust) return;
+      activeCustomerId = cust.id;
+
+      document.getElementById('editCustName').value = cust.name || '';
+      document.getElementById('editCustPhone').value = cust.phone || '';
+      document.getElementById('editCustAddress').value = cust.address || '';
+      tempEditCustomerAvatar = cust.avatar || '';
+
+      const previewImg = document.getElementById('editCustAvatarPreview');
+      const placeholder = document.getElementById('editCustAvatarPlaceholder');
+      const removeBtn = document.getElementById('btnRemoveEditAvatar');
+
+      if (tempEditCustomerAvatar) {
+        previewImg.src = tempEditCustomerAvatar;
+        previewImg.style.display = 'block';
+        if (placeholder) placeholder.style.display = 'none';
+        if (removeBtn) removeBtn.style.display = 'inline-block';
+      } else {
+        previewImg.src = '';
+        previewImg.style.display = 'none';
+        if (placeholder) placeholder.style.display = 'flex';
+        if (removeBtn) removeBtn.style.display = 'none';
+      }
+
+      openModal('editCustomerModal');
+    }
+
+    function handleEditCustomerAvatarSelected(event) {
+      const file = event.target.files && event.target.files[0];
+      if (!file) return;
+
+      try {
+        const previewUrl = URL.createObjectURL(file);
+        const previewImg = document.getElementById('editCustAvatarPreview');
+        const placeholder = document.getElementById('editCustAvatarPlaceholder');
+        if (previewImg) {
+          previewImg.src = previewUrl;
+          previewImg.style.display = 'block';
+        }
+        if (placeholder) placeholder.style.display = 'none';
+      } catch (err) {
+        console.warn(err);
+      }
+
+      processImageFile(file, 140, 0.75, function(base64Url) {
+        tempEditCustomerAvatar = base64Url;
+        const previewImg = document.getElementById('editCustAvatarPreview');
+        if (previewImg) previewImg.src = base64Url;
+        const removeBtn = document.getElementById('btnRemoveEditAvatar');
+        if (removeBtn) removeBtn.style.display = 'inline-block';
+
+        const cust = appData.customers.find(c => String(c.id) === String(activeCustomerId));
+        if (cust) {
+          cust.avatar = base64Url;
+          saveData();
+          updateDetailAvatarUI(cust);
+          renderCustomerList();
+          showToast('ছবি তাৎক্ষণিক সেভ হয়েছে');
+        }
+        event.target.value = '';
+      });
+    }
+
+    function removeEditCustomerAvatar() {
+      tempEditCustomerAvatar = '';
+      const previewImg = document.getElementById('editCustAvatarPreview');
+      if (previewImg) {
+        previewImg.src = '';
+        previewImg.style.display = 'none';
+      }
+      const placeholder = document.getElementById('editCustAvatarPlaceholder');
+      if (placeholder) placeholder.style.display = 'flex';
+      const removeBtn = document.getElementById('btnRemoveEditAvatar');
+      if (removeBtn) removeBtn.style.display = 'none';
+
+      const cust = appData.customers.find(c => String(c.id) === String(activeCustomerId));
+      if (cust) {
+        cust.avatar = '';
+        saveData();
+        updateDetailAvatarUI(cust);
+        renderCustomerList();
+        showToast('ছবি মুছে ফেলা হয়েছে');
+      }
+    }
+
+    function handleSaveEditCustomer(e) {
+      e.preventDefault();
+      const name = document.getElementById('editCustName').value.trim();
+      if (!name) {
+        alert('কাস্টমারের নাম লিখুন');
+        return;
+      }
+      const cust = appData.customers.find(c => String(c.id) === String(activeCustomerId));
+      if (!cust) return;
+
+      cust.name = name;
+      cust.phone = document.getElementById('editCustPhone').value.trim();
+      cust.address = document.getElementById('editCustAddress').value.trim();
+      cust.avatar = tempEditCustomerAvatar || '';
+
+      saveData();
+      updateDetailAvatarUI(cust);
+      document.getElementById('detailCustName').innerText = cust.name;
+      document.getElementById('detailCustPhone').innerText = cust.phone ? cust.phone : (cust.address || 'নম্বর নেই');
+
+      const callBtn = document.getElementById('callBtn');
+      if (cust.phone) {
+        callBtn.href = 'tel:' + cust.phone;
+        callBtn.style.display = 'inline-flex';
+      } else {
+        callBtn.style.display = 'none';
+      }
+
+      renderCustomerList();
+      closeModal('editCustomerModal');
+      showToast('কাস্টমার তথ্য ও ছবি আপডেট হয়েছে');
+    }
+
+    function openNewCustomerModal() {
+      document.getElementById('custName').value = '';
+      document.getElementById('custPhone').value = '';
+      document.getElementById('custAddress').value = '';
+      document.getElementById('custInitialDue').value = '';
+      removeNewCustomerAvatar();
+      openModal('newCustomerModal');
+      setTimeout(() => document.getElementById('custName').focus(), 150);
+    }
+
+    function handleSaveCustomer(e) {
+      e.preventDefault();
+      const name = document.getElementById('custName').value.trim();
+      const phone = document.getElementById('custPhone').value.trim();
+      const address = document.getElementById('custAddress').value.trim();
+      const initialDue = parseFloat(document.getElementById('custInitialDue').value) || 0;
+
+      if (!name) {
+        alert('কাস্টমারের নাম লিখুন');
+        return;
+      }
+
+      const newCust = {
+        id: 'c_' + Date.now(),
+        name: name,
+        phone: phone,
+        address: address,
+        avatar: tempNewCustomerAvatar || '',
+        createdAt: new Date().toISOString(),
+        transactions: []
+      };
+
+      if (initialDue > 0) {
+        newCust.transactions.push({
+          id: 'tx_' + Date.now(),
+          type: 'due',
+          amount: roundAmount(initialDue),
+          note: 'প্রারম্ভিক বাকি',
+          date: new Date().toISOString().split('T')[0]
+        });
+      }
+
+      appData.customers.unshift(newCust);
+      saveData();
+      removeNewCustomerAvatar();
+      closeModal('newCustomerModal');
+      showToast('কাস্টমার যুক্ত হয়েছে');
+      openCustomerDetailModal(newCust.id);
+    }
+
+    function openCustomerDetailModal(custId) {
+      activeCustomerId = custId;
+      const cust = appData.customers.find(c => String(c.id) === String(custId));
+      if (!cust) return;
+
+      document.getElementById('detailCustName').innerText = cust.name;
+      document.getElementById('detailCustPhone').innerText = cust.phone ? cust.phone : (cust.address || 'নম্বর নেই');
+      updateDetailAvatarUI(cust);
+
+      const callBtn = document.getElementById('callBtn');
+      if (cust.phone) {
+        callBtn.href = 'tel:' + cust.phone;
+        callBtn.style.display = 'inline-flex';
+      } else {
+        callBtn.style.display = 'none';
+      }
+
+      document.getElementById('txDate').value = new Date().toISOString().split('T')[0];
+      document.getElementById('txAmount').value = '';
+      document.getElementById('txNote').value = '';
+      setTxType('due');
+      filterTxNoteSuggestions();
+
+      updateDetailModalUI(cust);
+      openModal('customerDetailModal');
+      setTimeout(() => document.getElementById('txAmount').focus(), 150);
+    }
+
+    function updateDetailModalUI(cust) {
+      const stats = getCustomerStats(cust);
+      const bal = stats.balance;
+      const balEl = document.getElementById('detailBalanceVal');
+      const tagEl = document.getElementById('detailBalanceTag');
+
+      if (bal > 0) {
+        balEl.className = 'hero-due-amt due';
+        balEl.innerText = '৳ ' + bal.toLocaleString('bn-BD');
+        tagEl.innerText = 'বর্তমান বাকি';
+        tagEl.style.color = 'var(--due)';
+      } else {
+        balEl.className = 'hero-due-amt paid';
+        balEl.innerText = '৳ ০';
+        tagEl.innerText = 'পরিশোধিত';
+        tagEl.style.color = 'var(--paid)';
+      }
+
+      const waBtn = document.getElementById('waBtn');
+      if (waBtn) {
+        waBtn.style.display = 'inline-flex';
+      }
+
+      const historyList = document.getElementById('txHistoryList');
+      const txCount = document.getElementById('txCount');
+      const txs = (cust.transactions || []).slice().reverse();
+      txCount.innerText = txs.length;
+
+      historyList.innerHTML = '';
+      if (txs.length === 0) {
+        historyList.innerHTML = '<div style="text-align: center; color: var(--text-muted); padding: 12px; font-size: 12px;">কোন লেনদেন রেকর্ড নেই</div>';
+      } else {
+        txs.forEach(t => {
+          const isDue = t.type === 'due';
+          const item = document.createElement('div');
+          item.className = 'hist-card';
+          item.innerHTML = `
+            <div class="hist-card-left">
+              <span class="hist-badge-tag ${isDue ? 'due' : 'paid'}">
+                ${isDue ? 'বাকি' : 'জমা'}
+              </span>
+              <div class="hist-card-text">
+                <p>${escapeHtml(t.note || (isDue ? 'বাকি নিয়েছেন' : 'জমা দিয়েছেন'))}</p>
+                <span>${escapeHtml(t.date || '')}</span>
+              </div>
+            </div>
+            <div class="hist-card-right">
+              <div class="hist-amt ${isDue ? 'due' : 'paid'}">
+                ${isDue ? '-' : '+'} ৳ ${roundAmount(t.amount).toLocaleString('bn-BD')}
+              </div>
+              <button class="btn-del-mini" onclick="deleteTransaction('${t.id}')" title="মুছুন">
+                <svg class="icon icon-sm" viewBox="0 0 24 24"><line x1="18" x2="6" y1="6" y2="18"/><line x1="6" x2="18" y1="6" y2="18"/></svg>
+              </button>
+            </div>
+          `;
+          historyList.appendChild(item);
+        });
+      }
+    }
+
+    function setTxType(type) {
+      currentTxType = type;
+      const btnDue = document.getElementById('btnTypeDue');
+      const btnPaid = document.getElementById('btnTypePaid');
+      const submitBtn = document.getElementById('txSubmitBtn');
+
+      if (type === 'due') {
+        btnDue.className = 'pill-opt active due';
+        btnPaid.className = 'pill-opt paid';
+        submitBtn.innerHTML = `
+          <svg class="icon icon-sm" viewBox="0 0 24 24"><line x1="12" x2="12" y1="5" y2="19"/><line x1="5" x2="19" y1="12" y2="12"/></svg>
+          বাকি এন্ট্রি যুক্ত করুন
+        `;
+        submitBtn.style.background = 'var(--due)';
+      } else {
+        btnPaid.className = 'pill-opt active paid';
+        btnDue.className = 'pill-opt due';
+        submitBtn.innerHTML = `
+          <svg class="icon icon-sm" viewBox="0 0 24 24"><line x1="12" x2="12" y1="5" y2="19"/><line x1="5" x2="19" y1="12" y2="12"/></svg>
+          জমা এন্ট্রি যুক্ত করুন
+        `;
+        submitBtn.style.background = 'var(--paid)';
+      }
+    }
+
+    function addAmount(val) {
+      const input = document.getElementById('txAmount');
+      const current = parseFloat(input.value) || 0;
+      input.value = current + val;
+    }
+
+    function handleSaveTransaction(e) {
+      e.preventDefault();
+      if (!activeCustomerId) return;
+      const cust = appData.customers.find(c => String(c.id) === String(activeCustomerId));
+      if (!cust) return;
+
+      const amount = parseFloat(document.getElementById('txAmount').value);
+      if (!amount || amount <= 0) {
+        alert('টাকার সঠিক পরিমাণ লিখুন');
+        return;
+      }
+
+      const note = document.getElementById('txNote').value.trim();
+      const date = document.getElementById('txDate').value || new Date().toISOString().split('T')[0];
+
+      if (!cust.transactions) cust.transactions = [];
+
+      cust.transactions.push({
+        id: 'tx_' + Date.now(),
+        type: currentTxType,
+        amount: roundAmount(amount),
+        note: note || (currentTxType === 'due' ? 'বাকি নিয়েছেন' : 'জমা দিয়েছেন'),
+        date: date
+      });
+
+      if (note && note !== 'বাকি নিয়েছেন' && note !== 'জমা দিয়েছেন') {
+        if (!Array.isArray(appData.savedTxNotes)) appData.savedTxNotes = [];
+        const idx = appData.savedTxNotes.indexOf(note);
+        if (idx > -1) {
+          appData.savedTxNotes.splice(idx, 1);
+        }
+        appData.savedTxNotes.unshift(note);
+        if (appData.savedTxNotes.length > 50) appData.savedTxNotes.pop();
+      }
+
+      saveData();
+      updateDetailModalUI(cust);
+      filterTxNoteSuggestions();
+      document.getElementById('txAmount').value = '';
+      document.getElementById('txNote').value = '';
+      showToast(currentTxType === 'due' ? 'বাকি হিসাব যুক্ত হয়েছে' : 'জমা হিসাব যুক্ত হয়েছে');
+    }
+
+    function deleteTransaction(txId) {
+      if (!confirm('এই লেনদেন রেকর্ডটি মুছে ফেলতে চান?')) return;
+      const cust = appData.customers.find(c => String(c.id) === String(activeCustomerId));
+      if (!cust || !cust.transactions) return;
+
+      cust.transactions = cust.transactions.filter(t => t.id !== txId);
+      saveData();
+      updateDetailModalUI(cust);
+      showToast('রেকর্ড মুছে ফেলা হয়েছে');
+    }
+
+    function deleteCurrentCustomer() {
+      if (!activeCustomerId) return;
+      const cust = appData.customers.find(c => String(c.id) === String(activeCustomerId));
+      if (!cust) return;
+
+      if (confirm(`আপনি কি "${cust.name}" এর সকল বাকি হিসাব মুছে ফেলতে চান?`)) {
+        appData.customers = appData.customers.filter(c => String(c.id) !== String(activeCustomerId));
+        saveData();
+        closeModal('customerDetailModal');
+        showToast('কাস্টমার মুছে ফেলা হয়েছে');
+      }
+    }
+
+    function openShopSettings() {
+      const newName = prompt('দোকানের নাম লিখুন:', appData.shopName || '');
+      if (newName !== null && newName.trim()) {
+        appData.shopName = newName.trim();
+        saveData();
+        showToast('দোকানের নাম পরিবর্তিত হয়েছে');
+      }
+    }
+
+    function openBackupModal() {
+      openModal('backupModal');
+    }
+
+    // PDF Export
+    function exportFullLedgerPDF() {
+      closeModal('backupModal');
+      
+      let grandTotalDue = 0;
+      let grandTotalGiven = 0;
+      let grandTotalPaid = 0;
+      let rowsHtml = '';
+
+      appData.customers.forEach((c, idx) => {
+        const stats = getCustomerStats(c);
+        grandTotalGiven += stats.totalDue;
+        grandTotalPaid += stats.totalPaid;
+        const bal = stats.balance;
+        if (bal > 0) grandTotalDue += bal;
+
+        rowsHtml += `
+          <tr>
+            <td class="text-center">${idx + 1}</td>
+            <td><strong>${escapeHtml(c.name)}</strong></td>
+            <td>${escapeHtml(c.phone || '-')}</td>
+            <td>${escapeHtml(c.address || '-')}</td>
+            <td class="text-right">৳ ${stats.totalDue.toLocaleString('bn-BD')}</td>
+            <td class="text-right">৳ ${stats.totalPaid.toLocaleString('bn-BD')}</td>
+            <td class="text-right" style="color: ${bal > 0 ? '#b91c1c' : '#15803d'}; font-weight: bold;">
+              ৳ ${bal.toLocaleString('bn-BD')}
+            </td>
+          </tr>
+        `;
+      });
+
+      grandTotalDue = roundAmount(grandTotalDue);
+      grandTotalGiven = roundAmount(grandTotalGiven);
+      grandTotalPaid = roundAmount(grandTotalPaid);
+
+      const todayStr = new Date().toLocaleDateString('bn-BD', { year: 'numeric', month: 'long', day: 'numeric' });
+
+      const printHtml = `
+        <div style="text-align: center; margin-bottom: 20px; border-bottom: 2px solid #047857; padding-bottom: 12px;">
+          <h1 style="font-size: 24px; color: #064e3b; margin-bottom: 4px;">${escapeHtml(appData.shopName || 'দোকানের বাকি খাতা')}</h1>
+          <p style="font-size: 13px; color: #555;">পূর্ণাঙ্গ বাকি হিসাব বিবরণী | তারিখ: ${todayStr}</p>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; margin-bottom: 16px; background: #f8fafc; padding: 12px; border: 1px solid #e2e8f0; border-radius: 6px;">
+          <div><strong>মোট কাস্টমার:</strong> ${appData.customers.length} জন</div>
+          <div><strong>মোট দেওয়া বাকি:</strong> ৳ ${grandTotalGiven.toLocaleString('bn-BD')}</div>
+          <div><strong>মোট আদায়:</strong> ৳ ${grandTotalPaid.toLocaleString('bn-BD')}</div>
+          <div><strong>মোট বকেয়া:</strong> <span style="color: #b91c1c; font-weight: bold; font-size: 15px;">৳ ${grandTotalDue.toLocaleString('bn-BD')}</span></div>
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th style="width: 35px;" class="text-center">নং</th>
+              <th>কাস্টমারের নাম</th>
+              <th>মোবাইল নম্বর</th>
+              <th>ঠিকানা</th>
+              <th class="text-right">মোট বাকি</th>
+              <th class="text-right">মোট জমা</th>
+              <th class="text-right">বর্তমান বকেয়া</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${rowsHtml || '<tr><td colspan="7" class="text-center" style="padding: 16px;">কোন হিসাব এন্ট্রি নেই</td></tr>'}
+          </tbody>
+        </table>
+
+        <div style="margin-top: 48px; display: flex; justify-content: space-between; padding: 0 30px;">
+          <div style="text-align: center; border-top: 1px solid #777; width: 140px; padding-top: 4px; font-size: 12px;">হিসাবরক্ষক</div>
+          <div style="text-align: center; border-top: 1px solid #777; width: 140px; padding-top: 4px; font-size: 12px;">দোকানদারের স্বাক্ষর</div>
+        </div>
+      `;
+
+      triggerPrintEngine(printHtml, `${appData.shopName || 'Dukan'}_Baki_Report`);
+    }
+
+    function generateCustomerStatementText(cust) {
+      if (!cust) return '';
+      const shop = (appData.shopName || 'দোকানের বাকি খাতা').trim();
+      const stats = getCustomerStats(cust);
+      const bal = stats.balance;
+      const totalDue = stats.totalDue;
+      const totalPaid = stats.totalPaid;
+      
+      let text = `🏪 *${shop}*\n`;
+      text += `📋 *বাকি হিসাব বিবরণী*\n`;
+      text += `📅 তারিখ: ${new Date().toLocaleDateString('bn-BD', { year: 'numeric', month: 'long', day: 'numeric' })}\n`;
+      text += `━━━━━━━━━━━━━━━━━━━━━\n`;
+      text += `👤 *গ্রাহক:* ${cust.name}\n`;
+      if (cust.phone) text += `📞 *মোবাইল:* ${cust.phone}\n`;
+      if (cust.address) text += `📍 *ঠিকানা:* ${cust.address}\n`;
+      text += `━━━━━━━━━━━━━━━━━━━━━\n`;
+      text += `💵 মোট বাকি নিয়েছেন: ৳${roundAmount(totalDue).toLocaleString('bn-BD')}\n`;
+      text += `💳 মোট জমা দিয়েছেন: ৳${roundAmount(totalPaid).toLocaleString('bn-BD')}\n`;
+      text += `👉 *বর্তমান নিট বাকি: ৳${roundAmount(bal).toLocaleString('bn-BD')}*\n`;
+      text += `━━━━━━━━━━━━━━━━━━━━━\n\n`;
+      
+      const txs = (cust.transactions || []);
+      if (txs.length > 0) {
+        text += `📝 *লেনদেনের বিস্তারিত বিবরণী:*\n`;
+        const listToShow = txs.slice(-30);
+        listToShow.forEach((t, i) => {
+          const isDue = t.type === 'due';
+          const icon = isDue ? '🔴 বাকি' : '🟢 জমা';
+          const sign = isDue ? '(-)' : '(+)';
+          const noteStr = t.note ? ` | বিবরণ: ${t.note}` : '';
+          text += `${i + 1}. [${t.date || ''}] ${icon}: ৳${roundAmount(t.amount).toLocaleString('bn-BD')} ${sign}${noteStr}\n`;
+        });
+        if (txs.length > 30) {
+          text += `... (পূর্বে আরও ${txs.length - 30}টি লেনদেন রয়েছে)\n`;
+        }
+        text += `\n━━━━━━━━━━━━━━━━━━━━━\n`;
+      }
+      
+      if (bal > 0) {
+        text += `সম্মানিত গ্রাহক, অনুগ্রহ করে হিসাবটি যাচাই করে সুবিধাজনক সময়ে আপনার বকেয়া ৳${roundAmount(bal).toLocaleString('bn-BD')} টাকা পরিশোধ করার বিনীত অনুরোধ রইল।\n\n`;
+      } else {
+        text += `আলহামদুলিল্লাহ, আপনার সকল বাকি পরিশোধিত আছে। আমাদের সাথে থাকার জন্য ধন্যবাদ।\n\n`;
+      }
+      text += `ধন্যবাদান্তে,\n*${shop}*`;
+      return text;
+    }
+
+    function sendWhatsAppCustomerStatement(custId) {
+      const targetId = custId || activeCustomerId;
+      const cust = appData.customers.find(c => String(c.id) === String(targetId));
+      if (!cust) return;
+
+      const fullText = generateCustomerStatementText(cust);
+      const encoded = encodeURIComponent(fullText);
+
+      if (cust.phone) {
+        const cleanPhone = cust.phone.replace(/[^0-9]/g, '');
+        const phoneWithCountry = cleanPhone.startsWith('88') ? cleanPhone : ('88' + cleanPhone);
+        const waUrl = `https://wa.me/${phoneWithCountry}?text=${encoded}`;
+        
+        // Direct wa.me URL opens WhatsApp directly to customer's chat
+        window.location.href = waUrl;
+      } else {
+        // If no phone number is recorded for customer, open Android share sheet or WhatsApp generic
+        if (window.AndroidBridge && typeof window.AndroidBridge.shareDataText === 'function') {
+          window.AndroidBridge.shareDataText(cust.name + " - বাকি হিসাব", fullText);
+        } else {
+          window.location.href = `whatsapp://send?text=${encoded}`;
+        }
+      }
+    }
+
+    function exportCustomerStatementPDF() {
+      if (!activeCustomerId) return;
+      const cust = appData.customers.find(c => String(c.id) === String(activeCustomerId));
+      if (!cust) return;
+
+      const stats = getCustomerStats(cust);
+      const todayStr = new Date().toLocaleDateString('bn-BD', { year: 'numeric', month: 'long', day: 'numeric' });
+
+      let txRows = '';
+      (cust.transactions || []).forEach((t, i) => {
+        const isDue = t.type === 'due';
+        txRows += `
+          <tr>
+            <td class="text-center">${i + 1}</td>
+            <td>${escapeHtml(t.date || '')}</td>
+            <td style="color: ${isDue ? '#b91c1c' : '#15803d'}; font-weight: bold;">
+              ${isDue ? 'বাকি (-)' : 'জমা (+)'}
+            </td>
+            <td>${escapeHtml(t.note || '-')}</td>
+            <td class="text-right">৳ ${roundAmount(t.amount).toLocaleString('bn-BD')}</td>
+          </tr>
+        `;
+      });
+
+      const printHtml = `
+        <div style="text-align: center; margin-bottom: 16px; border-bottom: 2px solid #047857; padding-bottom: 10px;">
+          <h1 style="font-size: 22px; color: #064e3b; margin-bottom: 4px;">${escapeHtml(appData.shopName || 'দোকানের বাকি খাতা')}</h1>
+          <p style="font-size: 12px; color: #555;">গ্রাহক বাকি স্লিপ / রসিদ</p>
+        </div>
+
+        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 10px; margin-bottom: 14px; display: flex; justify-content: space-between; align-items: center;">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            ${cust.avatar ? `<img src="${cust.avatar}" style="width: 44px; height: 44px; border-radius: 6px; object-fit: cover; border: 1px solid #cbd5e1;" alt="">` : ''}
+            <div>
+              <div style="font-size: 15px;"><strong>কাস্টমার:</strong> ${escapeHtml(cust.name)}</div>
+              <div style="font-size: 12px; color: #555;"><strong>মোবাইল:</strong> ${escapeHtml(cust.phone || '-')} | <strong>ঠিকানা:</strong> ${escapeHtml(cust.address || '-')}</div>
+            </div>
+          </div>
+          <div style="text-align: right; font-size: 12px;"><strong>তারিখ:</strong> ${todayStr}</div>
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th style="width: 35px;" class="text-center">নং</th>
+              <th>তারিখ</th>
+              <th>ধরণ</th>
+              <th>বিবরণ</th>
+              <th class="text-right">পরিমাণ (৳)</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${txRows || '<tr><td colspan="5" class="text-center">কোন লেনদেন রেকর্ড নেই</td></tr>'}
+          </tbody>
+        </table>
+
+        <div style="margin-top: 14px; background: #fff5f5; border: 1px solid #fecaca; border-radius: 6px; padding: 12px; display: flex; justify-content: space-between; align-items: center;">
+          <span style="font-size: 15px; font-weight: bold;">বর্তমান বকেয়া বাকি:</span>
+          <span style="font-size: 20px; font-weight: bold; color: #b91c1c;">৳ ${stats.balance.toLocaleString('bn-BD')}</span>
+        </div>
+
+        <div style="margin-top: 48px; display: flex; justify-content: space-between; padding: 0 20px;">
+          <div style="text-align: center; border-top: 1px solid #777; width: 120px; padding-top: 4px; font-size: 11px;">গ্রাহকের স্বাক্ষর</div>
+          <div style="text-align: center; border-top: 1px solid #777; width: 120px; padding-top: 4px; font-size: 11px;">দোকানদারের স্বাক্ষর</div>
+        </div>
+      `;
+
+      triggerPrintEngine(printHtml, `${cust.name}_Due_Slip`);
+    }
+
+    function triggerPrintEngine(htmlContent, jobName) {
+      const container = document.getElementById('printContainer');
+      container.innerHTML = htmlContent;
+
+      if (window.AndroidBridge && typeof window.AndroidBridge.printDocument === 'function') {
+        window.AndroidBridge.printDocument(jobName);
+      } else {
+        window.print();
+      }
+    }
+
+    function exportCSV() {
+      closeModal('backupModal');
+      let csvContent = "\uFEFF";
+      csvContent += "ক্রমিক,কাস্টমারের নাম,মোবাইল নম্বর,ঠিকানা,মোট বাকি,মোট জমা,বর্তমান বকেয়া বাকি\n";
+
+      appData.customers.forEach((c, idx) => {
+        const stats = getCustomerStats(c);
+        const row = [
+          idx + 1,
+          `"${(c.name || '').replace(/"/g, '""')}"`,
+          `"${(c.phone || '').replace(/"/g, '""')}"`,
+          `"${(c.address || '').replace(/"/g, '""')}"`,
+          stats.totalDue,
+          stats.totalPaid,
+          stats.balance
+        ].join(",");
+        csvContent += row + "\n";
+      });
+
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${appData.shopName || 'Dukan'}_Baki_Excel_${new Date().toISOString().split('T')[0]}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showToast('এক্সেল ফাইল ডাউনলোড হয়েছে');
+    }
+
+    function exportData() {
+      closeModal('backupModal');
+      const json = JSON.stringify(appData, null, 2);
+      const dateStr = new Date().toISOString().split('T')[0];
+      const filename = `Dukan_Baki_Backup_${dateStr}.json`;
+      
+      const blob = new Blob([json], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      
+      showToast('ব্যাকআপ ফাইল সেভ হয়েছে');
+    }
+
+    function triggerRestoreInput() {
+      document.getElementById('restoreFileInput').click();
+    }
+
+    function handleRestoreFile(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const imported = JSON.parse(e.target.result);
+          if (imported && Array.isArray(imported.customers)) {
+            if (confirm(`এই ব্যাকআপ ফাইলে ${imported.customers.length} জন কাস্টমার পাওয়া গেছে। রিস্টোর করতে চান?`)) {
+              appData = imported;
+              saveData();
+              closeModal('backupModal');
+              showToast('ডাটা সফলভাবে রিস্টোর হয়েছে');
+            }
+          } else {
+            alert('সঠিক ব্যাকআপ ফাইল নির্বাচন করুন');
+          }
+        } catch (err) {
+          alert('ফাইলটি পড়া সম্ভব হয়নি: ' + err.message);
+        }
+      };
+      reader.readAsText(file);
+      event.target.value = '';
+    }
+
+    /* Bottom Navigation Tab Switcher */
+    function switchNavTab(tabName) {
+      currentNavTab = tabName;
+      
+      document.querySelectorAll('.nav-tab-btn').forEach(btn => btn.classList.remove('active'));
+      const activeBtn = document.getElementById(
+        tabName === 'baki' ? 'navBtnBaki' : (tabName === 'other' ? 'navBtnOther' : 'navBtnReports')
+      );
+      if (activeBtn) activeBtn.classList.add('active');
+
+      document.getElementById('tabBakiPage').style.display = (tabName === 'baki') ? 'block' : 'none';
+      document.getElementById('tabOtherPage').style.display = (tabName === 'other') ? 'block' : 'none';
+      document.getElementById('tabReportsPage').style.display = (tabName === 'reports') ? 'block' : 'none';
+
+      const fabBtn = document.getElementById('mainFabBtn');
+      const fabText = document.getElementById('fabText');
+      const searchWrap = document.querySelector('.search-wrap');
+
+      if (tabName === 'baki') {
+        fabBtn.style.display = 'flex';
+        fabText.innerText = 'নতুন কাস্টমার';
+        if (searchWrap) {
+          searchWrap.style.display = 'block';
+          document.getElementById('searchInput').placeholder = 'কাস্টমারের নাম বা মোবাইল নম্বর খুঁজুন...';
+          document.getElementById('searchInput').value = '';
+        }
+        renderCustomerList();
+      } else if (tabName === 'other') {
+        fabBtn.style.display = 'flex';
+        fabText.innerText = 'নতুন খরচ/আয়';
+        if (searchWrap) {
+          searchWrap.style.display = 'block';
+          document.getElementById('searchInput').placeholder = 'খরচ বা আয়ের হিসাব খুঁজুন...';
+          document.getElementById('searchInput').value = '';
+        }
+        renderOtherAccounts();
+      } else if (tabName === 'reports') {
+        fabBtn.style.display = 'none';
+        if (searchWrap) {
+          searchWrap.style.display = 'none';
+        }
+        renderReportsPage();
+      }
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function handleFabClick() {
+      if (currentNavTab === 'baki') {
+        openNewCustomerModal();
+      } else if (currentNavTab === 'other') {
+        openOtherEntryModal();
+      } else {
+        openBackupModal();
+      }
+    }
+
+    /* Other Accounts (দোকানের অন্যান্য হিসাব) */
+    const OTHER_EXPENSE_CATEGORIES = [
+      'দোকান ভাড়া',
+      'বিদ্যুৎ ও ইউটিলিটি বিল',
+      'পাইকারি মাল ক্রয়',
+      'কর্মচারীর বেতন / মজুরি',
+      'পরিবহন ও গাড়িভাড়া',
+      'চা-নাস্তা ও আপ্যায়ন',
+      'দোকান মেরামত ও ডেকোরেশন',
+      'প্যাকেজিং ও ব্যাগ খরচ',
+      'অন্যান্য দোকান খরচ'
+    ];
+
+    const OTHER_INCOME_CATEGORIES = [
+      'দৈনিক নগদ বিক্রি',
+      'পাইকারি কমিশন / ছাড়',
+      'অন্যান্য জমা / আয়'
+    ];
+
+    /* Dynamic Past Note Suggestions (100% User History, Zero Mock Data) */
+    function getPastTxNotes() {
+      const set = new Set();
+      const list = [];
+      const add = (txt) => {
+        if (!txt) return;
+        const clean = txt.trim();
+        if (!clean || clean.length < 2) return;
+        if (clean === 'বাকি নিয়েছেন' || clean === 'জমা দিয়েছেন') return;
+        if (!set.has(clean)) {
+          set.add(clean);
+          list.push(clean);
+        }
+      };
+      (appData.savedTxNotes || []).forEach(add);
+      (appData.customers || []).forEach(c => {
+        (c.transactions || []).forEach(t => add(t.note));
+      });
+      return list;
+    }
+
+    function getPastOtherNotes() {
+      const set = new Set();
+      const list = [];
+      const add = (txt) => {
+        if (!txt) return;
+        const clean = txt.trim();
+        if (!clean || clean.length < 2) return;
+        if (!set.has(clean)) {
+          set.add(clean);
+          list.push(clean);
+        }
+      };
+      (appData.savedOtherNotes || []).forEach(add);
+      (appData.otherEntries || []).forEach(e => add(e.note));
+      return list;
+    }
+
+    function filterTxNoteSuggestions() {
+      const input = document.getElementById('txNote');
+      const wrap = document.getElementById('txNoteHistoryWrap');
+      const bar = document.getElementById('txNoteChipsBar');
+      if (!input || !wrap || !bar) return;
+
+      const allNotes = getPastTxNotes();
+      if (allNotes.length === 0) {
+        wrap.style.display = 'none';
+        return;
+      }
+
+      const query = input.value.trim().toLowerCase();
+      let matches = allNotes;
+      if (query) {
+        matches = allNotes.filter(n => n.toLowerCase().includes(query));
+      }
+
+      if (matches.length === 0) {
+        wrap.style.display = 'none';
+        return;
+      }
+
+      wrap.style.display = 'block';
+      const displayNotes = matches.slice(0, 8);
+      bar.innerHTML = displayNotes.map(n => `
+        <span class="note-chip-item">
+          <button type="button" class="note-chip" onclick="applyNoteSuggestion('txNote', '${escapeHtml(n)}')">
+            ${escapeHtml(n)}
+          </button>
+          <button type="button" class="note-chip-del" onclick="deleteSavedTxNote(event, '${escapeHtml(n)}')" title="সাজেশন থেকে মুছুন">×</button>
+        </span>
+      `).join('');
+    }
+
+    function filterOtherNoteSuggestions() {
+      const input = document.getElementById('otherNoteInput');
+      const wrap = document.getElementById('otherNoteHistoryWrap');
+      const bar = document.getElementById('otherNoteChipsBar');
+      if (!input || !wrap || !bar) return;
+
+      const allNotes = getPastOtherNotes();
+      if (allNotes.length === 0) {
+        wrap.style.display = 'none';
+        return;
+      }
+
+      const query = input.value.trim().toLowerCase();
+      let matches = allNotes;
+      if (query) {
+        matches = allNotes.filter(n => n.toLowerCase().includes(query));
+      }
+
+      if (matches.length === 0) {
+        wrap.style.display = 'none';
+        return;
+      }
+
+      wrap.style.display = 'block';
+      const displayNotes = matches.slice(0, 8);
+      bar.innerHTML = displayNotes.map(n => `
+        <span class="note-chip-item">
+          <button type="button" class="note-chip" onclick="applyNoteSuggestion('otherNoteInput', '${escapeHtml(n)}')">
+            ${escapeHtml(n)}
+          </button>
+          <button type="button" class="note-chip-del" onclick="deleteSavedOtherNote(event, '${escapeHtml(n)}')" title="সাজেশন থেকে মুছুন">×</button>
+        </span>
+      `).join('');
+    }
+
+    function deleteSavedTxNote(e, noteText) {
+      if (e) e.stopPropagation();
+      if (Array.isArray(appData.savedTxNotes)) {
+        appData.savedTxNotes = appData.savedTxNotes.filter(n => n !== noteText);
+        saveData();
+      }
+      filterTxNoteSuggestions();
+    }
+
+    function deleteSavedOtherNote(e, noteText) {
+      if (e) e.stopPropagation();
+      if (Array.isArray(appData.savedOtherNotes)) {
+        appData.savedOtherNotes = appData.savedOtherNotes.filter(n => n !== noteText);
+        saveData();
+      }
+      filterOtherNoteSuggestions();
+    }
+
+    function applyNoteSuggestion(inputId, text) {
+      const input = document.getElementById(inputId);
+      if (input) {
+        input.value = text;
+        input.focus();
+      }
+    }
+
+    function openOtherEntryModal() {
+      document.getElementById('otherDateInput').value = new Date().toISOString().split('T')[0];
+      document.getElementById('otherAmountInput').value = '';
+      document.getElementById('otherNoteInput').value = '';
+      setOtherType('expense');
+      filterOtherNoteSuggestions();
+      openModal('otherEntryModal');
+      setTimeout(() => document.getElementById('otherAmountInput').focus(), 150);
+    }
+
+    function setOtherType(type) {
+      currentOtherType = type;
+      const btnExp = document.getElementById('btnOtherTypeExpense');
+      const btnInc = document.getElementById('btnOtherTypeIncome');
+      const select = document.getElementById('otherCategorySelect');
+      const submitBtn = document.getElementById('btnSaveOtherSubmit');
+
+      if (type === 'expense') {
+        btnExp.className = 'pill-opt active due';
+        btnInc.className = 'pill-opt paid';
+        submitBtn.style.background = 'var(--due)';
+        submitBtn.innerHTML = `
+          <svg class="icon icon-sm" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+          খরচ সংরক্ষণ করুন
+        `;
+        select.innerHTML = OTHER_EXPENSE_CATEGORIES.map(c => `<option value="${c}">${c}</option>`).join('');
+      } else {
+        btnInc.className = 'pill-opt active paid';
+        btnExp.className = 'pill-opt due';
+        submitBtn.style.background = 'var(--paid)';
+        submitBtn.innerHTML = `
+          <svg class="icon icon-sm" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+          আয়/বিক্রি সংরক্ষণ করুন
+        `;
+        select.innerHTML = OTHER_INCOME_CATEGORIES.map(c => `<option value="${c}">${c}</option>`).join('');
+      }
+    }
+
+    function addOtherAmount(val) {
+      const input = document.getElementById('otherAmountInput');
+      const current = parseFloat(input.value) || 0;
+      input.value = current + val;
+    }
+
+    function handleSaveOtherEntry(e) {
+      e.preventDefault();
+      const amount = parseFloat(document.getElementById('otherAmountInput').value);
+      if (!amount || amount <= 0) {
+        alert('টাকার সঠিক পরিমাণ লিখুন');
+        return;
+      }
+
+      const category = document.getElementById('otherCategorySelect').value;
+      const note = document.getElementById('otherNoteInput').value.trim();
+      const date = document.getElementById('otherDateInput').value || new Date().toISOString().split('T')[0];
+
+      if (!Array.isArray(appData.otherEntries)) {
+        appData.otherEntries = [];
+      }
+
+      const newEntry = {
+        id: 'oe_' + Date.now(),
+        type: currentOtherType,
+        category: category,
+        amount: roundAmount(amount),
+        note: note,
+        date: date,
+        createdAt: new Date().toISOString()
+      };
+
+      if (note) {
+        if (!Array.isArray(appData.savedOtherNotes)) appData.savedOtherNotes = [];
+        const idx = appData.savedOtherNotes.indexOf(note);
+        if (idx > -1) {
+          appData.savedOtherNotes.splice(idx, 1);
+        }
+        appData.savedOtherNotes.unshift(note);
+        if (appData.savedOtherNotes.length > 50) appData.savedOtherNotes.pop();
+      }
+
+      appData.otherEntries.unshift(newEntry);
+      saveData();
+      filterOtherNoteSuggestions();
+      closeModal('otherEntryModal');
+      showToast(currentOtherType === 'expense' ? 'দোকানের খরচ যুক্ত হয়েছে' : 'দোকানের আয় যুক্ত হয়েছে');
+      renderOtherAccounts();
+    }
+
+    function deleteOtherEntry(id) {
+      if (!confirm('আপনি কি এই হিসাবটি মুছে ফেলতে চান?')) return;
+      appData.otherEntries = (appData.otherEntries || []).filter(e => e.id !== id);
+      saveData();
+      showToast('হিসাব মুছে ফেলা হয়েছে');
+      renderOtherAccounts();
+    }
+
+    function setOtherFilter(filter, btn) {
+      currentOtherFilter = filter;
+      document.querySelectorAll('#tabOtherPage .filter-btn').forEach(el => el.classList.remove('active'));
+      btn.classList.add('active');
+      renderOtherList();
+    }
+
+    function getOtherCategoryIcon(cat, type) {
+      if (type === 'income') {
+        return `<svg class="icon icon-sm" viewBox="0 0 24 24"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/></svg>`;
+      }
+      if (cat.includes('ভাড়া')) {
+        return `<svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M3 21h18M3 7v14M21 7v14M6 2h12v5H6zM10 11v2M14 11v2"/></svg>`;
+      }
+      if (cat.includes('বিদ্যুৎ')) {
+        return `<svg class="icon icon-sm" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>`;
+      }
+      if (cat.includes('মাল')) {
+        return `<svg class="icon icon-sm" viewBox="0 0 24 24"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>`;
+      }
+      if (cat.includes('বেতন')) {
+        return `<svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>`;
+      }
+      if (cat.includes('গাড়ি') || cat.includes('পরিবহন')) {
+        return `<svg class="icon icon-sm" viewBox="0 0 24 24"><rect width="16" height="12" x="1" y="3" rx="2"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>`;
+      }
+      if (cat.includes('চা') || cat.includes('নাস্তা')) {
+        return `<svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" x2="6" y1="1" y2="4"/><line x1="10" x2="10" y1="1" y2="4"/><line x1="14" x2="14" y1="1" y2="4"/></svg>`;
+      }
+      return `<svg class="icon icon-sm" viewBox="0 0 24 24"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>`;
+    }
+
+    function renderOtherAccounts() {
+      const entries = appData.otherEntries || [];
+      const todayStr = new Date().toISOString().split('T')[0];
+
+      let todayIncome = 0;
+      let todayExpense = 0;
+
+      entries.forEach(e => {
+        if (e.date === todayStr) {
+          const amt = parseFloat(e.amount) || 0;
+          if (e.type === 'income') todayIncome += amt;
+          else todayExpense += amt;
+        }
+      });
+
+      todayIncome = roundAmount(todayIncome);
+      todayExpense = roundAmount(todayExpense);
+      const todayBalance = roundAmount(todayIncome - todayExpense);
+
+      document.getElementById('todayOtherIncomeVal').innerText = '৳ ' + todayIncome.toLocaleString('bn-BD');
+      document.getElementById('todayOtherExpenseVal').innerText = '৳ ' + todayExpense.toLocaleString('bn-BD');
+      document.getElementById('todayOtherBalanceVal').innerText = (todayBalance >= 0 ? '৳ ' : '-৳ ') + Math.abs(todayBalance).toLocaleString('bn-BD');
+
+      renderOtherList();
+    }
+
+    function renderOtherList() {
+      const search = (document.getElementById('searchInput').value || '').trim().toLowerCase();
+      const listContainer = document.getElementById('otherList');
+      const emptyState = document.getElementById('emptyOtherState');
+      const entries = appData.otherEntries || [];
+
+      const todayStr = new Date().toISOString().split('T')[0];
+      const thisMonthStr = todayStr.substring(0, 7);
+
+      let filtered = entries.filter(e => {
+        if (currentOtherFilter === 'today' && e.date !== todayStr) return false;
+        if (currentOtherFilter === 'month' && (!e.date || !e.date.startsWith(thisMonthStr))) return false;
+        if (currentOtherFilter === 'expense' && e.type !== 'expense') return false;
+        if (currentOtherFilter === 'income' && e.type !== 'income') return false;
+
+        if (search) {
+          const matchCat = (e.category || '').toLowerCase().includes(search);
+          const matchNote = (e.note || '').toLowerCase().includes(search);
+          const matchAmt = String(e.amount || '').includes(search);
+          if (!matchCat && !matchNote && !matchAmt) return false;
+        }
+        return true;
+      });
+
+      listContainer.innerHTML = '';
+
+      if (filtered.length === 0) {
+        emptyState.style.display = 'block';
+        if (search) {
+          document.getElementById('emptyOtherTitle').innerText = '"' + search + '" পাওয়া যায়নি';
+          document.getElementById('emptyOtherSub').innerText = 'অন্যান্য খরচ বা আয়ের নাম দিয়ে খুঁজুন।';
+        } else {
+          document.getElementById('emptyOtherTitle').innerText = 'কোনো হিসাব রেকর্ড নেই';
+          document.getElementById('emptyOtherSub').innerText = 'নতুন এন্ট্রি করতে নিচের "+ নতুন খরচ/আয়" বাটনে চাপ দিন।';
+        }
+      } else {
+        emptyState.style.display = 'none';
+        filtered.forEach(entry => {
+          const isInc = entry.type === 'income';
+          const card = document.createElement('div');
+          card.className = 'other-entry-card';
+          card.innerHTML = `
+            <div class="other-left">
+              <div class="other-cat-icon ${entry.type}">
+                ${getOtherCategoryIcon(entry.category || '', entry.type)}
+              </div>
+              <div class="other-details">
+                <div class="other-cat-name">${escapeHtml(entry.category || 'অন্যান্য')}</div>
+                <div class="other-meta">
+                  <span>${escapeHtml(entry.date || '')}</span>
+                  ${entry.note ? `<span>•</span><span>${escapeHtml(entry.note)}</span>` : ''}
+                </div>
+              </div>
+            </div>
+            <div class="other-right">
+              <div class="other-amt ${entry.type}">
+                ${isInc ? '+৳ ' : '-৳ '}${roundAmount(entry.amount).toLocaleString('bn-BD')}
+              </div>
+              <button class="btn-trash" onclick="deleteOtherEntry('${entry.id}')" title="মুছুন">
+                <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
+              </button>
+            </div>
+          `;
+          listContainer.appendChild(card);
+        });
+      }
+    }
+
+    function exportOtherExpensesPDF() {
+      const entries = appData.otherEntries || [];
+      if (entries.length === 0) {
+        alert('প্রিন্ট করার মতো কোনো খরচ বা আয়ের রেকর্ড নেই');
+        return;
+      }
+
+      let totalExp = 0;
+      let totalInc = 0;
+      let rowsHtml = '';
+
+      entries.forEach((e, idx) => {
+        const amt = parseFloat(e.amount) || 0;
+        const isInc = e.type === 'income';
+        if (isInc) totalInc += amt;
+        else totalExp += amt;
+
+        rowsHtml += `
+          <tr>
+            <td class="text-center">${idx + 1}</td>
+            <td>${escapeHtml(e.date || '')}</td>
+            <td style="font-weight: bold; color: ${isInc ? '#15803d' : '#b91c1c'};">${isInc ? 'আয় / বিক্রি (+)' : 'দোকান খরচ (-)'}</td>
+            <td><strong>${escapeHtml(e.category || '-')}</strong></td>
+            <td>${escapeHtml(e.note || '-')}</td>
+            <td class="text-right" style="font-weight: bold; color: ${isInc ? '#15803d' : '#b91c1c'};">
+              ${isInc ? '+৳ ' : '-৳ '}${roundAmount(e.amount).toLocaleString('bn-BD')}
+            </td>
+          </tr>
+        `;
+      });
+
+      totalExp = roundAmount(totalExp);
+      totalInc = roundAmount(totalInc);
+      const netCash = roundAmount(totalInc - totalExp);
+      const todayStr = new Date().toLocaleDateString('bn-BD', { year: 'numeric', month: 'long', day: 'numeric' });
+
+      const printHtml = `
+        <div style="text-align: center; margin-bottom: 20px; border-bottom: 2px solid #047857; padding-bottom: 12px;">
+          <h1 style="font-size: 24px; color: #064e3b; margin-bottom: 4px;">${escapeHtml(appData.shopName || 'দোকানের হিসাব')}</h1>
+          <p style="font-size: 13px; color: #555;">দোকানের খরচ ও আয়ের পূর্ণাঙ্গ বিবরণী | তারিখ: ${todayStr}</p>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; margin-bottom: 16px; background: #f8fafc; padding: 12px; border: 1px solid #e2e8f0; border-radius: 6px;">
+          <div><strong>মোট রেকর্ড:</strong> ${entries.length} টি</div>
+          <div><strong>মোট নগদ বিক্রি/আয়:</strong> <span style="color: #15803d; font-weight: bold;">৳ ${totalInc.toLocaleString('bn-BD')}</span></div>
+          <div><strong>মোট দোকান খরচ:</strong> <span style="color: #b91c1c; font-weight: bold;">৳ ${totalExp.toLocaleString('bn-BD')}</span></div>
+          <div><strong>ক্যাশ উদ্বৃত্ত:</strong> <span style="font-weight: bold; color: #0369a1;">৳ ${netCash.toLocaleString('bn-BD')}</span></div>
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th style="width: 35px;" class="text-center">নং</th>
+              <th>তারিখ</th>
+              <th>ধরণ</th>
+              <th>খাত / ক্যাটাগরি</th>
+              <th>বিবরণ / নোট</th>
+              <th class="text-right">পরিমাণ (৳)</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${rowsHtml}
+          </tbody>
+        </table>
+
+        <div style="margin-top: 48px; display: flex; justify-content: flex-end; padding: 0 20px;">
+          <div style="text-align: center; border-top: 1px solid #777; width: 140px; padding-top: 4px; font-size: 12px;">দোকানদারের স্বাক্ষর</div>
+        </div>
+      `;
+
+      triggerPrintEngine(printHtml, `${appData.shopName || 'Dukan'}_Other_Expenses`);
+    }
+
+    function renderReportsPage() {
+      let grandTotalDue = 0;
+      let grandTotalGiven = 0;
+      let grandTotalPaid = 0;
+
+      (appData.customers || []).forEach(c => {
+        const stats = getCustomerStats(c);
+        grandTotalGiven += stats.totalDue;
+        grandTotalPaid += stats.totalPaid;
+        const bal = stats.balance;
+        if (bal > 0) grandTotalDue += bal;
+      });
+
+      let totalExp = 0;
+      let totalInc = 0;
+      (appData.otherEntries || []).forEach(e => {
+        const amt = parseFloat(e.amount) || 0;
+        if (e.type === 'income') totalInc += amt;
+        else totalExp += amt;
+      });
+
+      document.getElementById('repTotalGiven').innerText = '৳ ' + roundAmount(grandTotalGiven).toLocaleString('bn-BD');
+      document.getElementById('repTotalPaid').innerText = '৳ ' + roundAmount(grandTotalPaid).toLocaleString('bn-BD');
+      document.getElementById('repTotalDue').innerText = '৳ ' + roundAmount(grandTotalDue).toLocaleString('bn-BD');
+      document.getElementById('repTotalExpense').innerText = '৳ ' + roundAmount(totalExp).toLocaleString('bn-BD');
+      document.getElementById('repTotalIncome').innerText = '৳ ' + roundAmount(totalInc).toLocaleString('bn-BD');
+    }
+
+    function shareViaWhatsApp() {
+      closeModal('backupModal');
+      let grandTotalDue = 0;
+      let text = `*${appData.shopName || 'দোকানের বাকি খাতা'} - হিসাব বিবরণী*\n`;
+      text += `তারিখ: ${new Date().toLocaleDateString('bn-BD')}\n`;
+      text += `------------------------------------\n\n`;
+
+      if (appData.customers.length === 0) {
+        text += `বর্তমানে কোনো বাকি হিসাব এন্ট্রি নেই।\n`;
+      } else {
+        appData.customers.forEach((c, idx) => {
+          const bal = getCustomerBalance(c);
+          if (bal > 0) grandTotalDue += bal;
+          text += `${idx + 1}. *${c.name}* (${c.phone || '-'})\n   বাকি: ৳${bal}\n`;
+        });
+      }
+
+      grandTotalDue = roundAmount(grandTotalDue);
+
+      text += `\n------------------------------------\n`;
+      text += `*সর্বমোট মার্কেট বাকি:* ৳${grandTotalDue}\n`;
+      text += `*মোট কাস্টমার:* ${appData.customers.length} জন\n`;
+
+      if (window.AndroidBridge && typeof window.AndroidBridge.shareDataText === 'function') {
+        window.AndroidBridge.shareDataText("দোকানের বাকি খাতা", text);
+      } else {
+        const encoded = encodeURIComponent(text);
+        window.open(`https://wa.me/?text=${encoded}`, '_blank');
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      loadInitialData();
+      renderDashboard();
+      filterTxNoteSuggestions();
+      filterOtherNoteSuggestions();
+      
+      const today = new Date();
+      const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+      try {
+        document.getElementById('todayDateStr').innerText = today.toLocaleDateString('bn-BD', options);
+      } catch (e) {
+        document.getElementById('todayDateStr').innerText = today.toDateString();
+      }
+    });
+  </script>
+</body>
+</html>
